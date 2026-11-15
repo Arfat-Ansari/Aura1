@@ -1,0 +1,17 @@
+# Build and PlatformIO
+.pio/
+.vscode/
+*.bin
+*.elf
+*.hex
+
+# Python and Temp files (do not track any python scripts)
+*.py
+*.pyc
+__pycache__/
+*.log
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
