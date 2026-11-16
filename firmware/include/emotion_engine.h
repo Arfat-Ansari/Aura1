@@ -1,3 +1,15 @@
+/*
+ * emotion_engine.h - AURA 1 Behavior and Reaction System
+ * Arfat Ansari | Nov 2026
+ *
+ * simple state machine so the robot behaves like a real companion pet
+ * reacts to:
+ * - petting (touch sensor on top of head -> happy eyes + warm amber pulse + purr)
+ * - close objects (laser distance sensor -> curious head tilt + looks at you)
+ * - loud noises or table taps (mic / bump -> alert startled reaction)
+ * - idle timeout (goes to sleep after 45 seconds of no interaction)
+ */
+
 #ifndef AURA_EMOTION_ENGINE_H
 #define AURA_EMOTION_ENGINE_H
 
@@ -8,208 +20,175 @@
 #include "halo_leds.h"
 #include "sensors.h"
 
-/**
- * AURA-1 Affective Computing & Emotion Synthesis Engine
- * 
- * Implements a continuous 2D Valence-Arousal affect space (Russell circumplex)
- * mapping internal emotional states to multi-modal robotic actuation:
- * 1. 3-DOF zero-jerk quintic head kinematics (tilt, pitch, yaw)
- * 2. 12-LED procedural halo shader (chromaticity and pulse tempo)
- * 3. Dual GC9A01 circular eye micro-expressions (dilation, squint, blink rate)
- * 4. 25 Hz micro-vibration haptic purring on servo drive horns
- */
-
-enum AffectState {
-    AFFECT_IDLE_BREATHE,      // Calm homeostasis with harmonic breathing
-    AFFECT_ATTENTIVE_LISTEN,  // Active focus toward acoustic/visual stimuli
-    AFFECT_CURIOSITY_PONDER,  // Inquisitive head cock with eye saccades
-    AFFECT_EMPATHY_PURR,      // Physical bonding response to sustained touch
-    AFFECT_STARTLE_RECOIL,    // High-G shock or acoustic transient defense
-    AFFECT_DEEP_SLEEP         // Quiescent power-saving restorative state
-};
-
-struct AffectVector {
-    float valence;  // -1.0 (unpleasant/defensive) to +1.0 (pleasurable/bonding)
-    float arousal;  //  0.0 (quiescent/slumber) to +1.0 (hyper-reactive/shocked)
+enum RobotMood {
+    MOOD_IDLE,       // breathing motion, glances around occasionally
+    MOOD_LISTENING,  // hears sound, tilts head up to listen
+    MOOD_CURIOUS,    // sees something nearby, cocks head left/right
+    MOOD_HAPPY,      // getting petted on the head, eyes squint, purrs
+    MOOD_STARTLED,   // sudden loud sound or table bump, pulls head back
+    MOOD_SLEEPING    // nobody around, eyes shut, dim LEDs
 };
 
 class AuraEmotionEngine {
 private:
-    AffectState currentAffect;
-    AffectVector currentCoords;
-    AffectVector targetCoords;
-
-    uint32_t stateEntryTime;
-    uint32_t lastStimulusTime;
+    RobotMood currentMood;
+    uint32_t stateStartTime;
+    uint32_t lastInteractionTime;
     uint32_t lastPurrToggleTime;
     bool     purrPhase;
     float    breathPhase;
 
-    // Kinematic pose targets calculated by affect mapping
-    float targetPanDeg;
-    float targetPitchDeg;
-    float targetRollDeg;
-    float trajectoryDurationSec;
+    // target angles for head servos (degrees)
+    float targetPan;
+    float targetPitch;
+    float targetRoll;
+    float moveDuration;
 
 public:
     AuraEmotionEngine() :
-        currentAffect(AFFECT_IDLE_BREATHE),
-        stateEntryTime(0),
-        lastStimulusTime(0),
+        currentMood(MOOD_IDLE),
+        stateStartTime(0),
+        lastInteractionTime(0),
         lastPurrToggleTime(0),
         purrPhase(false),
         breathPhase(0.0f),
-        targetPanDeg(0.0f),
-        targetPitchDeg(0.0f),
-        targetRollDeg(0.0f),
-        trajectoryDurationSec(0.6f) {
-        currentCoords = {0.2f, 0.25f}; // Nominal peaceful baseline
-        targetCoords  = currentCoords;
-    }
+        targetPan(0.0f),
+        targetPitch(0.0f),
+        targetRoll(0.0f),
+        moveDuration(0.6f) {}
 
     void init(uint32_t now) {
-        stateEntryTime = now;
-        lastStimulusTime = now;
-        setAffect(AFFECT_IDLE_BREATHE, now);
+        stateStartTime = now;
+        lastInteractionTime = now;
+        setMood(MOOD_IDLE, now);
     }
 
-    void setAffect(AffectState newState, uint32_t now) {
-        currentAffect = newState;
-        stateEntryTime = now;
+    void setMood(RobotMood newMood, uint32_t now) {
+        currentMood = newMood;
+        stateStartTime = now;
 
-        switch (newState) {
-            case AFFECT_IDLE_BREATHE:
-                targetCoords = {0.20f, 0.25f};
-                trajectoryDurationSec = 0.85f;
+        switch (newMood) {
+            case MOOD_IDLE:
+                moveDuration = 0.85f;
                 break;
-            case AFFECT_ATTENTIVE_LISTEN:
-                targetCoords = {0.55f, 0.70f};
-                trajectoryDurationSec = 0.35f;
+            case MOOD_LISTENING:
+                moveDuration = 0.35f;
                 break;
-            case AFFECT_CURIOSITY_PONDER:
-                targetCoords = {0.65f, 0.50f};
-                trajectoryDurationSec = 0.50f;
+            case MOOD_CURIOUS:
+                moveDuration = 0.50f;
                 break;
-            case AFFECT_EMPATHY_PURR:
-                targetCoords = {0.95f, 0.35f};
-                trajectoryDurationSec = 0.40f;
+            case MOOD_HAPPY:
+                moveDuration = 0.40f;
                 break;
-            case AFFECT_STARTLE_RECOIL:
-                targetCoords = {-0.85f, 0.98f};
-                trajectoryDurationSec = 0.16f; // Rapid instinctive jerk
+            case MOOD_STARTLED:
+                moveDuration = 0.16f; // quick jump back
                 break;
-            case AFFECT_DEEP_SLEEP:
-                targetCoords = {0.05f, 0.05f};
-                trajectoryDurationSec = 1.40f; // Very slow heavy droop
+            case MOOD_SLEEPING:
+                moveDuration = 1.40f; // slow relaxed drop
                 break;
         }
     }
 
+    // check sensors and decide if mood should change
     void processPerception(const SensorReadings &sensors, uint32_t now) {
-        // High-priority emergency reflex: mechanical impact or loud shock
+        // 1. loud tap or bump gets immediate attention
         if (sensors.tableBumped || sensors.clapDetected) {
-            lastStimulusTime = now;
-            setAffect(AFFECT_STARTLE_RECOIL, now);
+            lastInteractionTime = now;
+            setMood(MOOD_STARTLED, now);
             return;
         }
 
-        // Tactile bonding takes immediate precedence over wandering
+        // 2. petting head takes priority over curiosity
         if (sensors.headPetted) {
-            lastStimulusTime = now;
-            if (currentAffect != AFFECT_EMPATHY_PURR) {
-                setAffect(AFFECT_EMPATHY_PURR, now);
+            lastInteractionTime = now;
+            if (currentMood != MOOD_HAPPY) {
+                setMood(MOOD_HAPPY, now);
             }
             return;
         }
 
-        // Acoustic vocal detection (human voice speech detected in band)
+        // 3. someone talking
         if (sensors.speechDetected) {
-            lastStimulusTime = now;
-            if (currentAffect != AFFECT_ATTENTIVE_LISTEN && currentAffect != AFFECT_EMPATHY_PURR) {
-                setAffect(AFFECT_ATTENTIVE_LISTEN, now);
+            lastInteractionTime = now;
+            if (currentMood != MOOD_LISTENING && currentMood != MOOD_HAPPY) {
+                setMood(MOOD_LISTENING, now);
             }
             return;
         }
 
-        // Proximity optical tracking via laser ToF
+        // 4. laser distance sensor sees someone close (under 800mm)
         if (sensors.visitorClose) {
-            lastStimulusTime = now;
-            if (currentAffect == AFFECT_IDLE_BREATHE || currentAffect == AFFECT_DEEP_SLEEP) {
-                setAffect(AFFECT_CURIOSITY_PONDER, now);
+            lastInteractionTime = now;
+            if (currentMood == MOOD_IDLE || currentMood == MOOD_SLEEPING) {
+                setMood(MOOD_CURIOUS, now);
             }
             return;
         }
 
         if (sensors.visitorPresent) {
-            lastStimulusTime = now;
-            if (currentAffect == AFFECT_DEEP_SLEEP) {
-                setAffect(AFFECT_IDLE_BREATHE, now);
+            lastInteractionTime = now;
+            if (currentMood == MOOD_SLEEPING) {
+                setMood(MOOD_IDLE, now);
             }
             return;
         }
 
-        // Temporal Decay and State Transitions
-        uint32_t dwellTime = now - stateEntryTime;
-        uint32_t idleDwellTime = now - lastStimulusTime;
+        // timers to fall back to idle or sleep
+        uint32_t timeInState = now - stateStartTime;
+        uint32_t timeSinceInteraction = now - lastInteractionTime;
 
-        if (currentAffect == AFFECT_STARTLE_RECOIL) {
-            if (dwellTime > 1200) {
-                // Recover from fright into hyper-vigilant attention
-                setAffect(AFFECT_ATTENTIVE_LISTEN, now);
+        if (currentMood == MOOD_STARTLED) {
+            if (timeInState > 1200) {
+                setMood(MOOD_LISTENING, now);
             }
-        } else if (currentAffect == AFFECT_EMPATHY_PURR) {
-            if (!sensors.headPetted && dwellTime > 2000) {
-                // Linger in pleased curiosity after petting stops
-                setAffect(AFFECT_CURIOSITY_PONDER, now);
+        } else if (currentMood == MOOD_HAPPY) {
+            if (!sensors.headPetted && timeInState > 2000) {
+                setMood(MOOD_CURIOUS, now);
             }
-        } else if (currentAffect == AFFECT_ATTENTIVE_LISTEN) {
-            if (dwellTime > 4000) {
-                setAffect(AFFECT_CURIOSITY_PONDER, now);
+        } else if (currentMood == MOOD_LISTENING) {
+            if (timeInState > 4000) {
+                setMood(MOOD_CURIOUS, now);
             }
-        } else if (currentAffect == AFFECT_CURIOSITY_PONDER) {
-            if (dwellTime > 5000) {
-                setAffect(AFFECT_IDLE_BREATHE, now);
+        } else if (currentMood == MOOD_CURIOUS) {
+            if (timeInState > 5000) {
+                setMood(MOOD_IDLE, now);
             }
-        } else if (currentAffect == AFFECT_IDLE_BREATHE) {
-            // After 45 seconds of absolute silence and zero touch, enter sleep
-            if (idleDwellTime > 45000) {
-                setAffect(AFFECT_DEEP_SLEEP, now);
+        } else if (currentMood == MOOD_IDLE) {
+            // go to sleep after 45s of nothing happening
+            if (timeSinceInteraction > 45000) {
+                setMood(MOOD_SLEEPING, now);
             }
         }
     }
 
+    // update head servos, eyes, and LEDs based on active mood
     void updateActuators(AuraKinematics &kinematics,
                          AuraEyeEngine &eyeEngine,
                          AuraHaloLEDs &haloLEDs,
                          uint32_t now) {
-        // Continuous smooth convergence of valence and arousal coordinates
-        currentCoords.valence += (targetCoords.valence - currentCoords.valence) * 0.08f;
-        currentCoords.arousal += (targetCoords.arousal - currentCoords.arousal) * 0.08f;
-
-        // Actuation Synthesis based on Current State
-        switch (currentAffect) {
-            case AFFECT_IDLE_BREATHE: {
-                breathPhase += 0.035f; // ~0.28 Hz natural respiratory cycle
+        switch (currentMood) {
+            case MOOD_IDLE: {
+                // gentle breathing sway
+                breathPhase += 0.035f;
                 if (breathPhase > 2.0f * PI) breathPhase -= 2.0f * PI;
 
-                float breathPitch = sinf(breathPhase) * 6.5f;
-                float driftPan    = sinf(breathPhase * 0.45f) * 12.0f;
-                targetPanDeg = driftPan;
-                targetPitchDeg = breathPitch;
-                targetRollDeg = 0.0f;
+                targetPan = sinf(breathPhase * 0.45f) * 12.0f;
+                targetPitch = sinf(breathPhase) * 6.5f;
+                targetRoll = 0.0f;
 
-                kinematics.setTargetPose(targetPanDeg, targetPitchDeg, targetRollDeg, trajectoryDurationSec);
+                kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
                 eyeEngine.setExpression(EXPR_NORMAL);
                 eyeEngine.setGaze(sinf(breathPhase * 0.3f) * 14.0f, 0.0f);
                 haloLEDs.setEffect(HALO_IDLE_CYAN_BREATHE);
                 break;
             }
 
-            case AFFECT_ATTENTIVE_LISTEN: {
-                targetPanDeg = 0.0f;
-                targetPitchDeg = 8.0f;   // Chin slightly elevated
-                targetRollDeg  = -12.0f; // Expressive listening head cock
-                kinematics.setTargetPose(targetPanDeg, targetPitchDeg, targetRollDeg, trajectoryDurationSec);
+            case MOOD_LISTENING: {
+                // chin tilted up slightly and head cocked to listen
+                targetPan = 0.0f;
+                targetPitch = 8.0f;
+                targetRoll = -12.0f;
+                kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
 
                 eyeEngine.setExpression(EXPR_ALERT);
                 eyeEngine.setGaze(0.0f, 0.0f);
@@ -217,63 +196,63 @@ public:
                 break;
             }
 
-            case AFFECT_CURIOSITY_PONDER: {
-                targetPanDeg = sinf((float)now * 0.001f) * 18.0f;
-                targetPitchDeg = 10.0f;
-                targetRollDeg  = 16.0f; // Opposite head tilt
-                kinematics.setTargetPose(targetPanDeg, targetPitchDeg, targetRollDeg, trajectoryDurationSec);
+            case MOOD_CURIOUS: {
+                // curious tilt side to side
+                targetPan = sinf((float)now * 0.001f) * 18.0f;
+                targetPitch = 10.0f;
+                targetRoll = 16.0f;
+                kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
 
                 eyeEngine.setExpression(EXPR_CURIOUS);
                 haloLEDs.setEffect(HALO_ALERT_ELECTRIC_BLUE);
                 break;
             }
 
-            case AFFECT_EMPATHY_PURR: {
-                // 25 Hz micro-vibration purr generated via high-frequency servo dither
-                if (now - lastPurrToggleTime >= 20) { // 25 Hz half-period (20ms)
+            case MOOD_HAPPY: {
+                // purr vibration: rapid tiny servo flutter (25 Hz)
+                if (now - lastPurrToggleTime >= 20) {
                     purrPhase = !purrPhase;
                     lastPurrToggleTime = now;
                 }
-                float purrOffset = purrPhase ? 1.6f : -1.6f;
+                float purr = purrPhase ? 1.6f : -1.6f;
 
-                targetPanDeg = 0.0f;
-                targetPitchDeg = -9.0f + purrOffset; // Nuzzling back into the hand
-                targetRollDeg  = purrOffset * 0.7f;
-                kinematics.setTargetPose(targetPanDeg, targetPitchDeg, targetRollDeg, 0.08f);
+                targetPan = 0.0f;
+                targetPitch = -9.0f + purr;
+                targetRoll = purr * 0.7f;
+                kinematics.setTargetPose(targetPan, targetPitch, targetRoll, 0.08f);
 
                 eyeEngine.setExpression(EXPR_HAPPY);
                 haloLEDs.setEffect(HALO_PET_WARM_AMBER);
                 break;
             }
 
-            case AFFECT_STARTLE_RECOIL: {
-                targetPanDeg = 0.0f;
-                targetPitchDeg = 24.0f; // Pull skull back sharply
-                targetRollDeg  = 0.0f;
-                kinematics.setTargetPose(targetPanDeg, targetPitchDeg, targetRollDeg, trajectoryDurationSec);
+            case MOOD_STARTLED: {
+                // pull head back fast
+                targetPan = 0.0f;
+                targetPitch = 24.0f;
+                targetRoll = 0.0f;
+                kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
 
                 eyeEngine.setExpression(EXPR_ALERT);
-                haloLEDs.setEffect(HALO_SURPRISE_WHITE_FLASH);
+                haloLEDs.setEffect(HALO_ALERT_ELECTRIC_BLUE);
                 break;
             }
 
-            case AFFECT_DEEP_SLEEP: {
-                targetPanDeg = 0.0f;
-                targetPitchDeg = -18.0f; // Head resting down
-                targetRollDeg  = 0.0f;
-                kinematics.setTargetPose(targetPanDeg, targetPitchDeg, targetRollDeg, trajectoryDurationSec);
+            case MOOD_SLEEPING: {
+                // head rests down, eyes closed, LEDs dim
+                targetPan = 0.0f;
+                targetPitch = -18.0f;
+                targetRoll = 5.0f;
+                kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
 
                 eyeEngine.setExpression(EXPR_SLEEPY);
-                haloLEDs.setEffect(HALO_SLEEPY_DIM_VIOLET);
+                haloLEDs.setEffect(HALO_IDLE_CYAN_BREATHE);
                 break;
             }
         }
     }
 
-    AffectState getCurrentAffect() const { return currentAffect; }
-    AffectVector getCoords() const { return currentCoords; }
-    float getTargetPitch() const { return targetPitchDeg; }
-    float getTargetRoll() const { return targetRollDeg; }
+    RobotMood getMood() const { return currentMood; }
 };
 
 #endif // AURA_EMOTION_ENGINE_H

@@ -10,7 +10,7 @@ Most commercial desktop robots either cost hundreds of dollars or their neck mov
 ## What It Does
 
 - 3-DOF Kinematic Head: The head moves in 3 axes (pan left/right, pitch up/down, roll tilt sideways) driven by three TowerPro MG90S metal gear servos linked with carbon fiber pushrods and brass ball joints on a central 608ZZ bearing turntable.
-- Dual Round Color Eyes: Two GC9A01 1.28 inch 240x240 circular IPS LCD screens running at 60 FPS over dual SPI channels. The eyes have animated pupils that dilate and track movement.
+- Dual Round Color Eyes: Two GC9A01 1.28 inch 240x240 circular IPS LCD screens running at 60 FPS over dual SPI channels. The eyes have animated pupils that dilate, blink, and track movement with natural saccades.
 - Laser Distance Perception: An ST VL53L1X time-of-flight laser distance sensor on the forehead reads ranges up to 4 meters, so the robot knows when someone is sitting in front of it and turns to look at them.
 - Sound Reactive: An INMP441 I2S digital MEMS microphone streams audio over DMA with real time FFT beat detection, allowing the robot to nod or react to music and voices.
 - Emotion Halo: A 12-LED WS2812B RGB halo ring around the neck turntable gives ambient emotional color feedback.
@@ -23,12 +23,13 @@ Aura1/
   cad/
     aura_base_chassis_printready.stl   # Base chassis with PCB standoffs and inspection cutout
     aura_skull_head_printready.stl     # Head skull frame with eye recesses and ToF mount
+    aura_servo_bracket_printready.stl  # Internal neck servo mounting plate with M2 screw bosses
     aura_assembly.blend                # Full Blender 4.2 parametric 3D CAD assembly
   firmware/
     platformio.ini                     # PlatformIO configuration for ESP32-S3
     include/
       servo_smooth.h                 # Cubic easing servo motion engine
-      display_eyes.h                 # Dual GC9A01 60 FPS eye rendering
+      display_eyes.h                 # Dual GC9A01 60 FPS eye rendering and saccades
       kinematics.h                   # 3-DOF spherical pushrod kinematics math
       emotion_engine.h               # State machine for idle, alert, and tracking behaviors
       sensors.h                      # VL53L1X ToF and capacitive touch polling
@@ -37,9 +38,12 @@ Aura1/
     src/
       main.cpp                       # Dual-core FreeRTOS main loop
   images/
-    aura_showcase_full.png             # Full 3/4 CAD showcase render
-    aura_head_closeup.png              # Head and eye display close-up
+    aura_day8_full_showcase.png        # Full 3/4 showcase render with active eye displays
+    aura_day8_eye_closeup.png          # Head close-up showing dual circular eye animations
+    aura_day8_internal_bracket.png     # Internal assembly showing servo mounting bracket
     aura_base_curvature.png            # Smooth 128-segment circular base close-up
+    aura_head_closeup.png              # Head and eye display close-up
+    aura_showcase_full.png             # Full 3/4 CAD showcase render
   .gitignore
   README.md
 ```
@@ -86,7 +90,7 @@ ESP32-S3 GPIO mapping for the carrier board:
 
 ## 3D Printing
 
-Both main body files are in the cad directory and ready to slice:
+All main structural parts are in the cad directory and ready to slice:
 
 1. Base Chassis (`aura_base_chassis_printready.stl`):
    - Material: PETG (recommended for strength around the bearing pocket)
@@ -100,6 +104,12 @@ Both main body files are in the cad directory and ready to slice:
    - Layer height: 0.16mm or 0.20mm
    - Infill: 20% gyroid
    - Note: Features curved 7.5mm bevels for an aerodynamic helmet profile with recessed mounting pockets for the dual GC9A01 displays.
+
+3. Internal Servo Bracket (`aura_servo_bracket_printready.stl`):
+   - Material: Tough PLA or PETG
+   - Layer height: 0.16mm
+   - Infill: 30% gyroid
+   - Note: Features 3x pockets to secure MG90S servos rigidly inside the neck with M2 screw bosses and a central cable channel for display ribbon cables.
 
 ## Building and Flashing Firmware
 
