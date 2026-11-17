@@ -10,6 +10,7 @@ Most commercial desktop robots either cost hundreds of dollars or their neck mov
 ## What It Does
 
 - 3-DOF Kinematic Head: The head moves in 3 axes (pan left/right, pitch up/down, roll tilt sideways) driven by three TowerPro MG90S metal gear servos linked with carbon fiber pushrods and brass ball joints on a central 608ZZ bearing turntable.
+- Capacitive Petting and Purr: A capacitive touch zone across the skull top detects human hand petting. When stroked, the servos do a subtle 25Hz haptic purr vibration, the eyes squint into happy anime arches, and the neck halo glows warm amber.
 - Dual Round Color Eyes: Two GC9A01 1.28 inch 240x240 circular IPS LCD screens running at 60 FPS over dual SPI channels. The eyes have animated pupils that dilate, blink, and track movement with natural saccades.
 - Laser Distance Perception: An ST VL53L1X time-of-flight laser distance sensor on the forehead reads ranges up to 4 meters, so the robot knows when someone is sitting in front of it and turns to look at them.
 - Sound Reactive: An INMP441 I2S digital MEMS microphone streams audio over DMA with real time FFT beat detection, allowing the robot to nod or react to music and voices.
@@ -21,29 +22,33 @@ Most commercial desktop robots either cost hundreds of dollars or their neck mov
 ```text
 Aura1/
   cad/
-    aura_base_chassis_printready.stl   # Base chassis with PCB standoffs and inspection cutout
-    aura_skull_head_printready.stl     # Head skull frame with eye recesses and ToF mount
-    aura_servo_bracket_printready.stl  # Internal neck servo mounting plate with M2 screw bosses
-    aura_assembly.blend                # Full Blender 4.2 parametric 3D CAD assembly
+    aura_base_chassis_printready.stl      # Base chassis with PCB standoffs and inspection cutout
+    aura_skull_head_printready.stl        # Head skull frame with eye recesses and ToF mount
+    aura_servo_bracket_printready.stl     # Internal neck servo mounting plate with M2 screw bosses
+    aura_turntable_bearing_printready.stl # 608ZZ bearing turntable with central wire pass-through
+    aura_assembly.blend                   # Full Blender 4.2 parametric 3D CAD assembly
   firmware/
-    platformio.ini                     # PlatformIO configuration for ESP32-S3
+    platformio.ini                        # PlatformIO configuration for ESP32-S3
     include/
-      servo_smooth.h                 # Cubic easing servo motion engine
-      display_eyes.h                 # Dual GC9A01 60 FPS eye rendering and saccades
-      kinematics.h                   # 3-DOF spherical pushrod kinematics math
-      emotion_engine.h               # State machine for idle, alert, and tracking behaviors
-      sensors.h                      # VL53L1X ToF and capacitive touch polling
-      halo_leds.h                    # 12-LED WS2812B RGB halo animations
-      audio_dsp.h                    # INMP441 I2S microphone sampling and FFT
+      servo_smooth.h                    # Cubic easing servo motion engine
+      display_eyes.h                    # Dual GC9A01 60 FPS eye rendering and saccades
+      kinematics.h                      # 3-DOF spherical pushrod kinematics math
+      emotion_engine.h                  # State machine for idle, alert, and tracking behaviors
+      petting_purr.h                    # Capacitive touch filtering and 25Hz purr vibration
+      sensors.h                         # VL53L1X ToF, touch, and microphone polling
+      halo_leds.h                       # 12-LED WS2812B RGB halo animations
+      audio_dsp.h                       # INMP441 I2S microphone sampling and FFT
     src/
-      main.cpp                       # Dual-core FreeRTOS main loop
+      main.cpp                          # Dual-core FreeRTOS main loop
   images/
-    aura_day8_full_showcase.png        # Full 3/4 showcase render with active eye displays
-    aura_day8_eye_closeup.png          # Head close-up showing dual circular eye animations
-    aura_day8_internal_bracket.png     # Internal assembly showing servo mounting bracket
-    aura_base_curvature.png            # Smooth 128-segment circular base close-up
-    aura_head_closeup.png              # Head and eye display close-up
-    aura_showcase_full.png             # Full 3/4 CAD showcase render
+    aura_day9_full_showcase.png           # Full 3/4 showcase render in happy resting pose
+    aura_day9_petting_amber_glow.png      # Warm amber halo glow during petting reaction
+    aura_day9_head_touchpad_closeup.png   # Close-up of head touch zone and happy eye displays
+    aura_day9_turntable_assembly.png      # Technical view of 608ZZ bearing turntable
+    aura_day9_purr_kinematics.png         # Frontal view showing neck tilt and purr flutter
+    aura_day8_full_showcase.png           # Day 8 full showcase render
+    aura_day8_eye_closeup.png             # Day 8 eye closeup
+    aura_day8_internal_bracket.png        # Day 8 internal servo bracket
   .gitignore
   README.md
 ```
@@ -110,6 +115,12 @@ All main structural parts are in the cad directory and ready to slice:
    - Layer height: 0.16mm
    - Infill: 30% gyroid
    - Note: Features 3x pockets to secure MG90S servos rigidly inside the neck with M2 screw bosses and a central cable channel for display ribbon cables.
+
+4. Turntable Bearing Mount (`aura_turntable_bearing_printready.stl`):
+   - Material: PETG
+   - Layer height: 0.16mm
+   - Infill: 40% gyroid for rigid bearing retention
+   - Note: Houses the central 608ZZ radial bearing with a 6.0mm hollow center channel for display and sensor wiring pass-through.
 
 ## Building and Flashing Firmware
 
