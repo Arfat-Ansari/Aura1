@@ -19,6 +19,7 @@
 #include "display_eyes.h"
 #include "halo_leds.h"
 #include "sensors.h"
+#include "voice_synth.h"
 
 enum RobotMood {
     MOOD_IDLE,       // breathing motion, glances around occasionally
@@ -63,7 +64,8 @@ public:
         setMood(MOOD_IDLE, now);
     }
 
-    void setMood(RobotMood newMood, uint32_t now) {
+    void setMood(RobotMood newMood, uint32_t now, AuraVoiceSynth *voice = nullptr) {
+        if (currentMood == newMood) return;
         currentMood = newMood;
         stateStartTime = now;
 
@@ -73,28 +75,33 @@ public:
                 break;
             case MOOD_LISTENING:
                 moveDuration = 0.35f;
+                if (voice) voice->play(VOICE_CONFIRM_CHIME, now);
                 break;
             case MOOD_CURIOUS:
                 moveDuration = 0.50f;
+                if (voice) voice->play(VOICE_CURIOUS_TRILL, now);
                 break;
             case MOOD_HAPPY:
                 moveDuration = 0.40f;
+                if (voice) voice->play(VOICE_HAPPY_CHIRP, now);
                 break;
             case MOOD_STARTLED:
                 moveDuration = 0.16f; // quick jump back
+                if (voice) voice->play(VOICE_STARTLED_SQUEAK, now);
                 break;
             case MOOD_SLEEPING:
                 moveDuration = 1.40f; // slow relaxed drop
+                if (voice) voice->play(VOICE_SLEEP_SIGH, now);
                 break;
         }
     }
 
     // check sensors and decide if mood should change
-    void processPerception(const SensorReadings &sensors, uint32_t now) {
+    void processPerception(const SensorReadings &sensors, AuraVoiceSynth &voice, uint32_t now) {
         // 1. loud tap or bump gets immediate attention
         if (sensors.tableBumped || sensors.clapDetected) {
             lastInteractionTime = now;
-            setMood(MOOD_STARTLED, now);
+            setMood(MOOD_STARTLED, now, &voice);
             return;
         }
 
@@ -102,7 +109,10 @@ public:
         if (sensors.headPetted) {
             lastInteractionTime = now;
             if (currentMood != MOOD_HAPPY) {
-                setMood(MOOD_HAPPY, now);
+                setMood(MOOD_HAPPY, now, &voice);
+            } else if (!voice.isPlaying()) {
+                // keep up gentle purring sound while being continuously stroked
+                voice.play(VOICE_PURR_WARBLE, now);
             }
             return;
         }
@@ -111,7 +121,7 @@ public:
         if (sensors.speechDetected) {
             lastInteractionTime = now;
             if (currentMood != MOOD_LISTENING && currentMood != MOOD_HAPPY) {
-                setMood(MOOD_LISTENING, now);
+                setMood(MOOD_LISTENING, now, &voice);
             }
             return;
         }
@@ -120,7 +130,7 @@ public:
         if (sensors.visitorClose) {
             lastInteractionTime = now;
             if (currentMood == MOOD_IDLE || currentMood == MOOD_SLEEPING) {
-                setMood(MOOD_CURIOUS, now);
+                setMood(MOOD_CURIOUS, now, &voice);
             }
             return;
         }
@@ -128,7 +138,7 @@ public:
         if (sensors.visitorPresent) {
             lastInteractionTime = now;
             if (currentMood == MOOD_SLEEPING) {
-                setMood(MOOD_IDLE, now);
+                setMood(MOOD_IDLE, now, &voice);
             }
             return;
         }
@@ -139,24 +149,24 @@ public:
 
         if (currentMood == MOOD_STARTLED) {
             if (timeInState > 1200) {
-                setMood(MOOD_LISTENING, now);
+                setMood(MOOD_LISTENING, now, &voice);
             }
         } else if (currentMood == MOOD_HAPPY) {
             if (!sensors.headPetted && timeInState > 2000) {
-                setMood(MOOD_CURIOUS, now);
+                setMood(MOOD_CURIOUS, now, &voice);
             }
         } else if (currentMood == MOOD_LISTENING) {
             if (timeInState > 4000) {
-                setMood(MOOD_CURIOUS, now);
+                setMood(MOOD_CURIOUS, now, &voice);
             }
         } else if (currentMood == MOOD_CURIOUS) {
             if (timeInState > 5000) {
-                setMood(MOOD_IDLE, now);
+                setMood(MOOD_IDLE, now, &voice);
             }
         } else if (currentMood == MOOD_IDLE) {
             // go to sleep after 45s of nothing happening
             if (timeSinceInteraction > 45000) {
-                setMood(MOOD_SLEEPING, now);
+                setMood(MOOD_SLEEPING, now, &voice);
             }
         }
     }

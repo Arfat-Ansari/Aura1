@@ -16,6 +16,7 @@
 #include "sensors.h"
 #include "halo_leds.h"
 #include "emotion_engine.h"
+#include "voice_synth.h"
 
 // hardware modules
 AuraKinematics    kinematics;
@@ -23,6 +24,7 @@ AuraEyeEngine     eyeEngine;
 AuraSensors       sensorEngine;
 AuraHaloLEDs      haloLEDs;
 AuraEmotionEngine emotionEngine;
+AuraVoiceSynth    voiceEngine;
 
 // tasks for both ESP32 cores
 TaskHandle_t TaskCore0 = NULL;
@@ -53,14 +55,18 @@ void TaskCore1_KinematicsAndRender(void *pvParameters) {
         uint32_t now = millis();
         const SensorReadings &s = sensorEngine.getReadings();
 
-        // 1. check what the robot should do based on distance and touch
-        emotionEngine.processPerception(s, now);
+        // 1. check what the robot should do based on distance, touch, and audio
+        emotionEngine.processPerception(s, voiceEngine, now);
 
         // 2. update target angles and eye moods
         emotionEngine.updateActuators(kinematics, eyeEngine, haloLEDs, now);
 
-        // 3. dilate pupils if someone gets close and smooth servo movement
+        // 3. dilate pupils if someone gets close and sync eyes/lights with voice
         eyeEngine.adaptToDistance(s.distanceMm);
+        voiceEngine.update(now);
+        eyeEngine.syncWithVoice(voiceEngine.getAudioLevel(), voiceEngine.getPitchRatio());
+        haloLEDs.syncWithVoice(voiceEngine.getAudioLevel());
+
         kinematics.update(0.12f);
         eyeEngine.update(now);
         haloLEDs.update(now);
@@ -86,6 +92,7 @@ void setup() {
     kinematics.init();
     sensorEngine.init();
     haloLEDs.init();
+    voiceEngine.init();
     emotionEngine.init(millis());
 
     Serial.println("[AURA] all hardware modules started");

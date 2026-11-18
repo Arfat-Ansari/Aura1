@@ -103,6 +103,19 @@ public:
 
         FastLED.show();
     }
+
+    // flare brightness slightly when robot chirps or talks
+    void syncWithVoice(float audioLevel) {
+        if (audioLevel > 0.05f) {
+            uint8_t boost = (uint8_t)(audioLevel * 80);
+            for (int i = 0; i < NUM_HALO_LEDS; i++) {
+                leds[i].r = qadd8(leds[i].r, boost);
+                leds[i].g = qadd8(leds[i].g, boost);
+                leds[i].b = qadd8(leds[i].b, boost);
+            }
+            FastLED.show();
+        }
+    }
 };
 
 #endif // AURA_HALO_LEDS_H

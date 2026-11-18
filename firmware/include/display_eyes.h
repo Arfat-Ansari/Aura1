@@ -206,6 +206,15 @@ public:
         }
     }
 
+    // sync eye squash and vertical glance with procedural speech synthesis
+    void syncWithVoice(float audioLevel, float pitchRatio) {
+        if (audioLevel > 0.05f) {
+            // eyes lift slightly on high notes and dilate on voice loudness
+            currentState.pupilY -= (pitchRatio - 0.5f) * 6.0f * audioLevel;
+            currentState.pupilDilation += audioLevel * 0.15f;
+        }
+    }
+
     const EyeState& getState() const { return currentState; }
 };
 
