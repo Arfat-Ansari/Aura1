@@ -92,6 +92,35 @@ ESP32-S3 GPIO mapping for the carrier board:
 | I2S Mic DIN | GPIO 7 | I2S Audio | Serial data from INMP441 |
 | RGB Halo Ring | GPIO 38 | RMT Peripheral | WS2812B 800kHz single-wire data |
 | Touch Head Petting | GPIO 1 | Capacitive Touch | Touch 1 sensing through skull |
+| I2S Speaker BCLK | GPIO 48 | I2S Audio Out | Bit clock line to MAX98357A amplifier |
+| I2S Speaker LRCLK | GPIO 47 | I2S Audio Out | Word select line to MAX98357A amplifier |
+| I2S Speaker DIN | GPIO 21 | I2S Audio Out | Serial PCM audio data to MAX98357A amplifier |
+
+## Voice and Acoustic Subsystem
+
+AURA 1 features a fully procedural voice engine and dedicated hardware acoustic subsystem:
+
+1. Acoustic Hardware Enclosure:
+   - 28mm 4-ohm 3W micro-speaker mounted with a 20-degree forward tilt toward the desktop surface.
+   - 9-slot radial acoustic sound grill cut into the lower front perimeter of the base chassis to project sound outward without muffling.
+   - Enclosed resonance chamber baffle providing back-volume isolation to eliminate acoustic phase cancellation and preserve warm low-mid harmonics.
+   - Dedicated chassis floor boss mounting for a MAX98357A I2S Class D mono amplifier breakout board right beside the main circular carrier PCB.
+
+2. Procedural Speech Synthesis (firmware/include/voice_synth.h):
+   - Generates responsive robotic vocalizations in real time directly on the ESP32-S3 using mathematical frequency sweeps, harmonic overtone mixing, and ADSR amplitude envelopes.
+   - Sound categories:
+     * Happy Chirp: Ascending Wall-E style cheerful arpeggio trill with 22Hz vibrato.
+     * Curious Trill: Inquisitive rising inflection for when objects are detected nearby.
+     * Purr Warble: Warm 25Hz amplitude-modulated harmonic drone synced with physical servo petting.
+     * Startled Squeak: Fast exponential downward drop for sudden loud noises or table impacts.
+     * Confirm Chime: Clean two-tone musical bell (C6 to G6) acknowledging voice input.
+     * Sleep Sigh: Slow descending filtered sine breath when the robot drifts to sleep.
+   - Zero SD-card overhead: All audio is synthesized algorithmically in RAM and streamed over I2S DMA buffers.
+
+3. Audio-Reactive Expressions:
+   - Real-time amplitude envelope tracking (`getAudioLevel()`) and pitch detection (`getPitchRatio()`).
+   - The dual GC9A01 eye displays dynamically squash and lift on high vocal notes.
+   - The 12-LED neck halo ring flares in brightness synchronously with robot vocal volume.
 
 ## 3D Printing
 
@@ -102,7 +131,7 @@ All main structural parts are in the cad directory and ready to slice:
    - Layer height: 0.20mm
    - Perimeters: 3 or 4 walls
    - Infill: 25% gyroid
-   - Note: The circular base was rebuilt with 128 segments and curved fillets on the rims so it prints completely smooth without vertical square ridges or flat facet lines.
+   - Note: Features 9 precision acoustic sound slots on the lower front skirt, an internal 28mm speaker pocket with sealing gasket ridge, mounting standoffs for the MAX98357A amplifier, and 4x M3 PCB standoffs matching EasyEDA coordinates (64.0mm x 48.0mm).
 
 2. Head Skull (`aura_skull_head_printready.stl`):
    - Material: Tough PLA or PETG (White)
