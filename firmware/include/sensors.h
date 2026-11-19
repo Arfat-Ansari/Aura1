@@ -39,6 +39,8 @@ struct SensorReadings {
     float soundLevelDb;     // mic volume level
     bool speechDetected;    // voice detected
     bool clapDetected;      // sudden clap detected
+    float soundAzimuthDeg;  // -90 to +90 deg sound direction
+    bool soundLocated;      // sound direction actively locked
 };
 
 class AuraSensors {
@@ -76,10 +78,12 @@ public:
         readings.visitorClose   = (readings.distanceMm < 800);
 
         // 3. update audio processing
-        audioDsp.update();
-        readings.soundLevelDb   = audioDsp.getSoundLevel();
-        readings.speechDetected = audioDsp.isSpeech();
-        readings.clapDetected   = audioDsp.isClap();
+        audioDsp.update(now);
+        readings.soundLevelDb    = audioDsp.getSoundLevelDb();
+        readings.speechDetected  = audioDsp.isSoundDetected();
+        readings.clapDetected    = audioDsp.isClap();
+        readings.soundAzimuthDeg = audioDsp.getSmoothedAzimuth();
+        readings.soundLocated    = audioDsp.isSoundDetected();
     }
 
     const SensorReadings& getReadings() const { return readings; }

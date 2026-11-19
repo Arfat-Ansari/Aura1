@@ -44,6 +44,7 @@ private:
     float targetPitch;
     float targetRoll;
     float moveDuration;
+    float soundPanAzimuth;
 
 public:
     AuraEmotionEngine() :
@@ -56,7 +57,8 @@ public:
         targetPan(0.0f),
         targetPitch(0.0f),
         targetRoll(0.0f),
-        moveDuration(0.6f) {}
+        moveDuration(0.6f),
+        soundPanAzimuth(0.0f) {}
 
     void init(uint32_t now) {
         stateStartTime = now;
@@ -117,9 +119,10 @@ public:
             return;
         }
 
-        // 3. someone talking
+        // 3. someone talking - lock onto sound direction
         if (sensors.speechDetected) {
             lastInteractionTime = now;
+            soundPanAzimuth = sensors.soundAzimuthDeg;
             if (currentMood != MOOD_LISTENING && currentMood != MOOD_HAPPY) {
                 setMood(MOOD_LISTENING, now, &voice);
             }
@@ -194,14 +197,14 @@ public:
             }
 
             case MOOD_LISTENING: {
-                // chin tilted up slightly and head cocked to listen
-                targetPan = 0.0f;
-                targetPitch = 8.0f;
-                targetRoll = -12.0f;
+                // pan neck toward sound azimuth, cock head with curiosity
+                targetPan = soundPanAzimuth;
+                targetPitch = 6.0f;
+                targetRoll = (soundPanAzimuth >= 0.0f) ? 8.5f : -8.5f;
                 kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
 
                 eyeEngine.setExpression(EXPR_ALERT);
-                eyeEngine.setGaze(0.0f, 0.0f);
+                eyeEngine.setGaze(soundPanAzimuth * 0.35f, 0.0f);
                 haloLEDs.setEffect(HALO_ALERT_ELECTRIC_BLUE);
                 break;
             }

@@ -41,6 +41,14 @@ Aura1/
     src/
       main.cpp                          # Dual-core FreeRTOS main loop
   images/
+    aura_day11_1_color_spatial_tracking.png     # Full showcase render with spatial sound tracking pose
+    aura_day11_2_color_mic_port_closeup.png     # Macro closeup of stereo acoustic mic port on visor
+    aura_day11_3_design_stereo_mic_cutaway.png  # CAD cutaway showing internal INMP441 board and gasket
+    aura_day11_4_design_spatial_acoustic_baseline.png # Front engineering CAD view of 80mm acoustic baseline
+    aura_day10_full_showcase.png          # Day 10 full robot showcase render with acoustic speaker grill
+    aura_day10_speaker_closeup.png        # Day 10 macro view of 9-slot acoustic sound grill
+    aura_day10_cad_acoustic_cavity.png    # Day 10 CAD cutaway showing internal 28mm speaker pocket
+    aura_day10_cad_max98357a_mount.png    # Day 10 CAD view of MAX98357A amplifier floor standoffs
     aura_day9_full_showcase.png           # Full 3/4 showcase render in happy resting pose
     aura_day9_petting_amber_glow.png      # Warm amber halo glow during petting reaction
     aura_day9_head_touchpad_closeup.png   # Close-up of head touch zone and happy eye displays
@@ -87,13 +95,15 @@ ESP32-S3 GPIO mapping for the carrier board:
 | I2C SCL (Sensors) | GPIO 48 | I2C Bus | 4.7k pull-up to 3.3V |
 | VL53L1X XSHUT | GPIO 2 | GPIO Out | Sensor hardware enable |
 | VL53L1X INT | GPIO 18 | GPIO Interrupt | New measurement alert |
-| I2S Mic BCLK | GPIO 15 | I2S Audio | Bit clock line |
-| I2S Mic LRCLK | GPIO 16 | I2S Audio | Word select line |
-| I2S Mic DIN | GPIO 7 | I2S Audio | Serial data from INMP441 |
-| RGB Halo Ring | GPIO 38 | RMT Peripheral | WS2812B 800kHz single-wire data |
+| I2S Mic SCK (Clock) | GPIO 40 | I2S Audio In | Shared bit clock for dual INMP441 mics |
+| I2S Mic WS (L/R) | GPIO 38 | I2S Audio In | Shared word select line |
+| I2S Mic SD (Data) | GPIO 39 | I2S Audio In | Time-multiplexed stereo I2S data in |
+| Mic Left L/R Pin | GND | Hardware Tie | Configures left mic to left I2S slot |
+| Mic Right L/R Pin | 3.3V | Hardware Tie | Configures right mic to right I2S slot |
+| RGB Halo Ring | GPIO 48 | RMT Peripheral | WS2812B 800kHz single-wire data |
 | Touch Head Petting | GPIO 1 | Capacitive Touch | Touch 1 sensing through skull |
-| I2S Speaker BCLK | GPIO 48 | I2S Audio Out | Bit clock line to MAX98357A amplifier |
-| I2S Speaker LRCLK | GPIO 47 | I2S Audio Out | Word select line to MAX98357A amplifier |
+| I2S Speaker BCLK | GPIO 42 | I2S Audio Out | Bit clock line to MAX98357A amplifier |
+| I2S Speaker LRCLK | GPIO 41 | I2S Audio Out | Word select line to MAX98357A amplifier |
 | I2S Speaker DIN | GPIO 21 | I2S Audio Out | Serial PCM audio data to MAX98357A amplifier |
 
 ## Voice and Acoustic Subsystem
@@ -137,7 +147,30 @@ All main structural parts are in the cad directory and ready to slice:
    - Material: Tough PLA or PETG (White)
    - Layer height: 0.16mm or 0.20mm
    - Infill: 20% gyroid
-   - Note: Features curved 7.5mm bevels for an aerodynamic helmet profile with recessed mounting pockets for the dual GC9A01 displays.
+   - Note: Features curved 7.5mm bevels for an aerodynamic helmet profile with recessed mounting pockets for the dual GC9A01 displays, twin 1.8mm acoustic microphone ports on the visor temples at an 80mm baseline, internal silicone vibration damping gasket seats, and mounting slots for dual INMP441 MEMS sensor boards.
+
+## Spatial Hearing and Directional Sound Localization
+
+AURA 1 uses a stereo pair of TDK InvenSense INMP441 omnidirectional I2S digital MEMS microphones to track sounds and orient its head toward whoever is speaking:
+
+1. Acoustic Baseline and Mechanical Isolation:
+   - Microphones are spaced 80mm apart across the visor temples (X = -40.0mm and X = +40.0mm at eye height Z = 84.0mm).
+   - Each microphone communicates with the outside world through a 1.8mm acoustic aperture pinhole surrounded by a protective bezel ring.
+   - 2.5mm silicone vibration decoupling gaskets sit between the INMP441 PCB and the 3D-printed skull wall, isolating the MEMS sensing element from mechanical servo vibration transmitted through the neck frame.
+
+2. Digital Signal Processing (firmware/include/audio_dsp.h):
+   - Both microphones share the I2S clock lines (SCK on GPIO 40, WS on GPIO 38) and time-multiplex their 24-bit audio data onto a single shared SD line (GPIO 39).
+   - An adaptive noise floor tracker continuously learns ambient background room noise using an exponential decay filter (decay factor 0.995).
+   - Real-time Interaural Level Difference (ILD) calculation compares the root-mean-square energy between left and right channels:
+     `ILD = (EnergyRight - EnergyLeft) / (EnergyRight + EnergyLeft)`
+   - Computes sound arrival azimuth from -90 degrees (full left) to +90 degrees (full right).
+   - A 0.14 ILD deadband threshold filters out ambient room reflections and servo motor hum so the head does not jitter unnecessarily.
+
+3. Auditory Gaze Tracking (firmware/include/emotion_engine.h):
+   - When a sudden sound, voice, or clap exceeds the noise floor threshold, the robot transitions to listening mode (`MOOD_LISTENING`).
+   - The neck pan servo rotates smoothly to center the robot on the sound source.
+   - The head cocks with an inquisitive roll angle (8.5 degrees tilt toward the sound origin).
+   - The dual GC9A01 pupils dart toward the speaker (+-2.5mm saccadic pupil translation) before the neck finishes turning, replicating natural human auditory gaze reflexes.
 
 3. Internal Servo Bracket (`aura_servo_bracket_printready.stl`):
    - Material: Tough PLA or PETG
