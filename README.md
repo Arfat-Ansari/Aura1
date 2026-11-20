@@ -46,6 +46,8 @@ Aura1/
     aura_day12_2_color_optical_baffle_closeup.png # Macro closeup of forehead optical ToF sensor and septum
     aura_day12_3_design_optical_cutaway.png     # CAD cutaway showing internal VL53L1X board and gasket
     aura_day12_4_design_multizone_geometry.png  # Front engineering CAD view showing multi-zone optical geometry
+    aura_day12_5_color_peekaboo_reaction.png    # Color render showing shy peek-a-boo interaction pose
+    aura_day12_6_design_optical_module_iso.png  # CAD isometric engineering view of forehead optical module
     aura_day11_1_color_spatial_tracking.png     # Full showcase render with spatial sound tracking pose
     aura_day11_2_color_mic_port_closeup.png     # Macro closeup of stereo acoustic mic port on visor
     aura_day11_3_design_stereo_mic_cutaway.png  # CAD cutaway showing internal INMP441 board and gasket
