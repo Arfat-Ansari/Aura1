@@ -38,9 +38,14 @@ Aura1/
       sensors.h                         # VL53L1X ToF, touch, and microphone polling
       halo_leds.h                       # 12-LED WS2812B RGB halo animations
       audio_dsp.h                       # INMP441 I2S microphone sampling and FFT
+      gesture_engine.h                  # ST VL53L1X multi-zone optical gesture and peek-a-boo
     src/
       main.cpp                          # Dual-core FreeRTOS main loop
   images/
+    aura_day12_1_color_gesture_showcase.png     # Full robot interactive optical gesture showcase render
+    aura_day12_2_color_optical_baffle_closeup.png # Macro closeup of forehead optical ToF sensor and septum
+    aura_day12_3_design_optical_cutaway.png     # CAD cutaway showing internal VL53L1X board and gasket
+    aura_day12_4_design_multizone_geometry.png  # Front engineering CAD view showing multi-zone optical geometry
     aura_day11_1_color_spatial_tracking.png     # Full showcase render with spatial sound tracking pose
     aura_day11_2_color_mic_port_closeup.png     # Macro closeup of stereo acoustic mic port on visor
     aura_day11_3_design_stereo_mic_cutaway.png  # CAD cutaway showing internal INMP441 board and gasket
@@ -171,6 +176,26 @@ AURA 1 uses a stereo pair of TDK InvenSense INMP441 omnidirectional I2S digital 
    - The neck pan servo rotates smoothly to center the robot on the sound source.
    - The head cocks with an inquisitive roll angle (8.5 degrees tilt toward the sound origin).
    - The dual GC9A01 pupils dart toward the speaker (+-2.5mm saccadic pupil translation) before the neck finishes turning, replicating natural human auditory gaze reflexes.
+
+## Optical Gesture Recognition and Multi-Zone ToF Interaction
+
+AURA 1 uses the multi-zone Region of Interest (ROI) capabilities of the ST VL53L1X time-of-flight laser sensor on its forehead to achieve optical swipe and proximity gesture recognition without requiring an onboard camera:
+
+1. Anti-Crosstalk Optical Baffle Hardware:
+   - In real-world ToF ranging, infrared light from the 940nm VCSEL laser emitter can scatter through front cover materials directly into the SPAD receiver array, producing severe distance errors (optical cross-talk).
+   - A dedicated 0.8mm vertical dividing septum is molded between the Tx and Rx optical channels at the forehead aperture, providing total physical photon isolation.
+   - Chamfered conical aperture bezels (27-degree FOV matching the sensor cone) prevent internal chassis reflections.
+   - An internal black silicone optical gasket seals the VL53L1X module against the inner skull wall.
+
+2. Multi-Zone Spatial Scanning (firmware/include/gesture_engine.h):
+   - The 16x16 SPAD array is dynamically re-addressed at 50Hz, alternating between a Left zone (center SPAD 199, 8x16 matrix) and a Right zone (center SPAD 231, 8x16 matrix).
+   - By tracking temporal entry deltas between the two zones (40ms to 450ms window), the firmware identifies horizontal hand swipe directions:
+     * Left-to-right swipe (`GESTURE_SWIPE_RIGHT`): Robot follows the user hand motion with a smooth pan right and curious double-chirp.
+     * Right-to-left swipe (`GESTURE_SWIPE_LEFT`): Robot smoothly turns its neck left to follow the gesture.
+
+3. Interactive Peek-a-boo Game:
+   - When a user puts their hand over the robot eyes and forehead (< 60mm distance across both zones for > 250ms), the robot enters peek-a-boo cover state (`GESTURE_PEEKABOO_COVER`). The head lowers slightly and the dual GC9A01 eyes squint closed with a quiet inquisitive trill.
+   - When the user suddenly pulls their hand away (`GESTURE_PEEKABOO_REVEAL`), the robot springs up (+12 degrees pitch), pupils dilate wide in excitement, the 12-LED neck halo pulses bright violet, and a celebratory Wall-E style chirp plays.
 
 3. Internal Servo Bracket (`aura_servo_bracket_printready.stl`):
    - Material: Tough PLA or PETG

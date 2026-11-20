@@ -16,6 +16,7 @@
 #include <Wire.h>
 #include "audio_dsp.h"
 #include "petting_purr.h"
+#include "gesture_engine.h"
 
 // I2C pins on ESP32-S3
 #define PIN_I2C_SDA         41
@@ -41,6 +42,11 @@ struct SensorReadings {
     bool clapDetected;      // sudden clap detected
     float soundAzimuthDeg;  // -90 to +90 deg sound direction
     bool soundLocated;      // sound direction actively locked
+    OpticalGestureType activeGesture; // detected hand wave or swipe
+    bool peekabooCovered;   // user covering robot's eyes
+    bool peekabooRevealed;  // user uncovered eyes in peekaboo game
+    float gesturePanOffset; // neck pan compensation for gestures
+    float gesturePitchOffset; // neck pitch compensation
 };
 
 class AuraSensors {
@@ -49,17 +55,21 @@ private:
     uint32_t lastReadTime;
     AuraAudioDSP audioDsp;
     AuraPettingEngine pettingEngine;
+    AuraGestureEngine gestureEngine;
+    bool toggleRoiZone;
 
 public:
-    AuraSensors() : lastReadTime(0) {
+    AuraSensors() : lastReadTime(0), toggleRoiZone(false) {
         memset(&readings, 0, sizeof(SensorReadings));
         readings.distanceMm = 2000;
+        readings.activeGesture = GESTURE_NONE;
     }
 
     void init() {
         Wire.begin(PIN_I2C_SDA, PIN_I2C_SCL, 400000); // 400kHz I2C
         audioDsp.init();
         pettingEngine.init();
+        gestureEngine.init();
     }
 
     void update() {
@@ -73,9 +83,18 @@ public:
         readings.purrVibration = pettingEngine.getPurrOffset();
         readings.petDuration   = pettingEngine.getPetDuration();
 
-        // 2. read distance sensor
+        // 2. read distance sensor and multi-zone gesture engine
         readings.visitorPresent = (readings.distanceMm < 3000);
         readings.visitorClose   = (readings.distanceMm < 800);
+
+        // alternate ROI zones between left and right at 50Hz
+        toggleRoiZone = !toggleRoiZone;
+        gestureEngine.updateZoneReading(toggleRoiZone, readings.distanceMm, now);
+        readings.activeGesture      = gestureEngine.getActiveGesture();
+        readings.peekabooCovered    = gestureEngine.isPeekabooCovered();
+        readings.peekabooRevealed   = gestureEngine.isPeekabooRevealed();
+        readings.gesturePanOffset   = gestureEngine.getGesturePanOffset();
+        readings.gesturePitchOffset = gestureEngine.getGesturePitchOffset();
 
         // 3. update audio processing
         audioDsp.update(now);
@@ -89,6 +108,7 @@ public:
     const SensorReadings& getReadings() const { return readings; }
     void setSimulatedDistance(uint16_t dist) { readings.distanceMm = dist; }
     AuraPettingEngine& getPettingEngine() { return pettingEngine; }
+    AuraGestureEngine& getGestureEngine() { return gestureEngine; }
 };
 
 #endif // AURA_SENSORS_H

@@ -26,7 +26,8 @@ enum HaloEffect {
     HALO_ALERT_ELECTRIC_BLUE,
     HALO_PET_WARM_AMBER,
     HALO_STARTLE_FLASH,
-    HALO_SLEEP_DIM
+    HALO_SLEEP_DIM,
+    HALO_GESTURE_VIOLET_PULSE
 };
 
 class AuraHaloLEDs {
@@ -96,6 +97,15 @@ public:
                 // barely visible deep blue
                 for (int i = 0; i < NUM_HALO_LEDS; i++) {
                     leds[i] = CRGB(0, 5, 20);
+                }
+                break;
+            }
+
+            case HALO_GESTURE_VIOLET_PULSE: {
+                // playful violet/magenta chase pulse during optical gesture play
+                uint8_t bright = (uint8_t)(160 + sinf(phase * 3.5f) * 60);
+                for (int i = 0; i < NUM_HALO_LEDS; i++) {
+                    leds[i] = CRGB((bright * 8) / 10, (bright * 2) / 10, bright);
                 }
                 break;
             }

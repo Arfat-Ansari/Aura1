@@ -22,12 +22,13 @@
 #include "voice_synth.h"
 
 enum RobotMood {
-    MOOD_IDLE,       // breathing motion, glances around occasionally
-    MOOD_LISTENING,  // hears sound, tilts head up to listen
-    MOOD_CURIOUS,    // sees something nearby, cocks head left/right
-    MOOD_HAPPY,      // getting petted on the head, eyes squint, purrs
-    MOOD_STARTLED,   // sudden loud sound or table bump, pulls head back
-    MOOD_SLEEPING    // nobody around, eyes shut, dim LEDs
+    MOOD_IDLE,         // breathing motion, glances around occasionally
+    MOOD_LISTENING,    // hears sound, tilts head up to listen
+    MOOD_CURIOUS,      // sees something nearby, cocks head left/right
+    MOOD_HAPPY,        // getting petted on the head, eyes squint, purrs
+    MOOD_STARTLED,     // sudden loud sound or table bump, pulls head back
+    MOOD_SLEEPING,     // nobody around, eyes shut, dim LEDs
+    MOOD_GESTURE_PLAY  // optical swipe tracking or peek-a-boo game
 };
 
 class AuraEmotionEngine {
@@ -45,6 +46,10 @@ private:
     float targetRoll;
     float moveDuration;
     float soundPanAzimuth;
+    float gesturePanOffset;
+    float gesturePitchOffset;
+    bool  peekabooCovered;
+    bool  peekabooRevealed;
 
 public:
     AuraEmotionEngine() :
@@ -58,7 +63,11 @@ public:
         targetPitch(0.0f),
         targetRoll(0.0f),
         moveDuration(0.6f),
-        soundPanAzimuth(0.0f) {}
+        soundPanAzimuth(0.0f),
+        gesturePanOffset(0.0f),
+        gesturePitchOffset(0.0f),
+        peekabooCovered(false),
+        peekabooRevealed(false) {}
 
     void init(uint32_t now) {
         stateStartTime = now;
@@ -95,6 +104,10 @@ public:
                 moveDuration = 1.40f; // slow relaxed drop
                 if (voice) voice->play(VOICE_SLEEP_SIGH, now);
                 break;
+            case MOOD_GESTURE_PLAY:
+                moveDuration = 0.28f; // fast responsive tracking
+                if (voice) voice->play(VOICE_CURIOUS_TRILL, now);
+                break;
         }
     }
 
@@ -115,6 +128,24 @@ public:
             } else if (!voice.isPlaying()) {
                 // keep up gentle purring sound while being continuously stroked
                 voice.play(VOICE_PURR_WARBLE, now);
+            }
+            return;
+        }
+
+        // 3. optical gesture interaction (peek-a-boo or hand swipe)
+        gesturePanOffset = sensors.gesturePanOffset;
+        gesturePitchOffset = sensors.gesturePitchOffset;
+        peekabooCovered = sensors.peekabooCovered;
+        peekabooRevealed = sensors.peekabooRevealed;
+
+        if (sensors.peekabooCovered || sensors.peekabooRevealed || 
+            sensors.activeGesture == GESTURE_SWIPE_RIGHT || sensors.activeGesture == GESTURE_SWIPE_LEFT) {
+            lastInteractionTime = now;
+            if (currentMood != MOOD_GESTURE_PLAY) {
+                setMood(MOOD_GESTURE_PLAY, now, &voice);
+            }
+            if (sensors.peekabooRevealed && !voice.isPlaying()) {
+                voice.play(VOICE_HAPPY_CHIRP, now);
             }
             return;
         }
@@ -165,6 +196,10 @@ public:
         } else if (currentMood == MOOD_CURIOUS) {
             if (timeInState > 5000) {
                 setMood(MOOD_IDLE, now, &voice);
+            }
+        } else if (currentMood == MOOD_GESTURE_PLAY) {
+            if (timeInState > 2500 && !peekabooCovered) {
+                setMood(MOOD_CURIOUS, now, &voice);
             }
         } else if (currentMood == MOOD_IDLE) {
             // go to sleep after 45s of nothing happening
@@ -260,6 +295,36 @@ public:
 
                 eyeEngine.setExpression(EXPR_SLEEPY);
                 haloLEDs.setEffect(HALO_IDLE_CYAN_BREATHE);
+                break;
+            }
+
+            case MOOD_GESTURE_PLAY: {
+                if (peekabooCovered) {
+                    targetPan = 0.0f;
+                    targetPitch = -12.0f;
+                    targetRoll = 0.0f;
+                    kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
+                    eyeEngine.setSquint(1.0f);
+                    eyeEngine.setGaze(0.0f, -8.0f);
+                    haloLEDs.setEffect(HALO_GESTURE_VIOLET_PULSE);
+                } else if (peekabooRevealed) {
+                    targetPan = 0.0f;
+                    targetPitch = 12.0f;
+                    targetRoll = 5.0f;
+                    kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
+                    eyeEngine.setExpression(EXPR_HAPPY);
+                    eyeEngine.setGaze(0.0f, 6.0f);
+                    haloLEDs.setEffect(HALO_GESTURE_VIOLET_PULSE);
+                } else {
+                    // follow hand swipe gesture
+                    targetPan = gesturePanOffset;
+                    targetPitch = 4.0f + gesturePitchOffset;
+                    targetRoll = (gesturePanOffset >= 0.0f) ? 8.0f : -8.0f;
+                    kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
+                    eyeEngine.setExpression(EXPR_CURIOUS);
+                    eyeEngine.setGaze(gesturePanOffset * 0.45f, 0.0f);
+                    haloLEDs.setEffect(HALO_GESTURE_VIOLET_PULSE);
+                }
                 break;
             }
         }
