@@ -17,6 +17,7 @@
 #include "audio_dsp.h"
 #include "petting_purr.h"
 #include "gesture_engine.h"
+#include "power_mgr.h"
 
 // I2C pins on ESP32-S3
 #define PIN_I2C_SDA         41
@@ -47,6 +48,10 @@ struct SensorReadings {
     bool peekabooRevealed;  // user uncovered eyes in peekaboo game
     float gesturePanOffset; // neck pan compensation for gestures
     float gesturePitchOffset; // neck pitch compensation
+    float batteryVoltage;   // 18650 cell voltage in Volts (3.2V to 4.2V)
+    uint8_t batteryPercent; // state of charge percentage (0-100%)
+    bool isCharging;        // true when USB-C power connected
+    bool isLowBattery;      // true when battery under 3.42V
 };
 
 class AuraSensors {
@@ -56,6 +61,7 @@ private:
     AuraAudioDSP audioDsp;
     AuraPettingEngine pettingEngine;
     AuraGestureEngine gestureEngine;
+    AuraPowerManager powerManager;
     bool toggleRoiZone;
 
 public:
@@ -63,6 +69,10 @@ public:
         memset(&readings, 0, sizeof(SensorReadings));
         readings.distanceMm = 2000;
         readings.activeGesture = GESTURE_NONE;
+        readings.batteryVoltage = 3.90f;
+        readings.batteryPercent = 75;
+        readings.isCharging = false;
+        readings.isLowBattery = false;
     }
 
     void init() {
@@ -70,6 +80,7 @@ public:
         audioDsp.init();
         pettingEngine.init();
         gestureEngine.init();
+        powerManager.init(millis());
     }
 
     void update() {
@@ -103,12 +114,20 @@ public:
         readings.clapDetected    = audioDsp.isClap();
         readings.soundAzimuthDeg = audioDsp.getSmoothedAzimuth();
         readings.soundLocated    = audioDsp.isSoundDetected();
+
+        // 4. update battery power manager
+        powerManager.update(now);
+        readings.batteryVoltage  = powerManager.getVoltage();
+        readings.batteryPercent  = powerManager.getPercentage();
+        readings.isCharging      = powerManager.isCharging();
+        readings.isLowBattery    = powerManager.isLowBattery();
     }
 
     const SensorReadings& getReadings() const { return readings; }
     void setSimulatedDistance(uint16_t dist) { readings.distanceMm = dist; }
     AuraPettingEngine& getPettingEngine() { return pettingEngine; }
     AuraGestureEngine& getGestureEngine() { return gestureEngine; }
+    AuraPowerManager& getPowerManager() { return powerManager; }
 };
 
 #endif // AURA_SENSORS_H

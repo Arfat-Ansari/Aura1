@@ -28,7 +28,8 @@ enum RobotMood {
     MOOD_HAPPY,        // getting petted on the head, eyes squint, purrs
     MOOD_STARTLED,     // sudden loud sound or table bump, pulls head back
     MOOD_SLEEPING,     // nobody around, eyes shut, dim LEDs
-    MOOD_GESTURE_PLAY  // optical swipe tracking or peek-a-boo game
+    MOOD_GESTURE_PLAY, // optical swipe tracking or peek-a-boo game
+    MOOD_LOW_BATTERY   // battery below 3.42V, drooping tired eyes and amber alert
 };
 
 class AuraEmotionEngine {
@@ -108,6 +109,10 @@ public:
                 moveDuration = 0.28f; // fast responsive tracking
                 if (voice) voice->play(VOICE_CURIOUS_TRILL, now);
                 break;
+            case MOOD_LOW_BATTERY:
+                moveDuration = 1.20f; // tired sluggish movement
+                if (voice) voice->play(VOICE_SLEEP_SIGH, now);
+                break;
         }
     }
 
@@ -173,6 +178,14 @@ public:
             lastInteractionTime = now;
             if (currentMood == MOOD_SLEEPING) {
                 setMood(MOOD_IDLE, now, &voice);
+            }
+            return;
+        }
+
+        // 5. low battery warning state
+        if (sensors.isLowBattery && !sensors.isCharging) {
+            if (currentMood != MOOD_LOW_BATTERY && currentMood != MOOD_HAPPY) {
+                setMood(MOOD_LOW_BATTERY, now, &voice);
             }
             return;
         }
@@ -325,6 +338,20 @@ public:
                     eyeEngine.setGaze(gesturePanOffset * 0.45f, 0.0f);
                     haloLEDs.setEffect(HALO_GESTURE_VIOLET_PULSE);
                 }
+                break;
+            }
+
+            case MOOD_LOW_BATTERY: {
+                // tired drooping head posture
+                targetPan = 0.0f;
+                targetPitch = -12.0f;
+                targetRoll = -3.0f;
+                kinematics.setTargetPose(targetPan, targetPitch, targetRoll, moveDuration);
+
+                eyeEngine.setExpression(EXPR_SLEEPY);
+                eyeEngine.setSquint(0.65f); // heavy drooping eyelids
+                eyeEngine.setGaze(0.0f, -6.0f);
+                haloLEDs.setEffect(HALO_PET_WARM_AMBER); // dim amber warning
                 break;
             }
         }

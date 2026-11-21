@@ -39,9 +39,16 @@ Aura1/
       halo_leds.h                       # 12-LED WS2812B RGB halo animations
       audio_dsp.h                       # INMP441 I2S microphone sampling and FFT
       gesture_engine.h                  # ST VL53L1X multi-zone optical gesture and peek-a-boo
+      power_mgr.h                       # 18650 Li-ion battery ADC monitoring and power states
     src/
       main.cpp                          # Dual-core FreeRTOS main loop
   images/
+    aura_day13_1_color_untethered_showcase.png  # Full untethered cordless robot showcase render
+    aura_day13_2_color_usbc_rear_closeup.png    # Macro closeup of rear USB-C charging port and power switch
+    aura_day13_3_color_low_battery_reaction.png # Color render of low-battery tired eye droop and amber warning
+    aura_day13_4_design_battery_cradle_cutaway.png # CAD cutaway showing 18650 cell in cradle and TP4056
+    aura_day13_5_design_power_stage_layout.png  # Top-down CAD engineering view of complete power stage layout
+    aura_day13_6_design_rear_port_iso.png       # Isometric CAD view of rear chassis skirt and ports
     aura_day12_1_color_gesture_showcase.png     # Full robot interactive optical gesture showcase render
     aura_day12_2_color_optical_baffle_closeup.png # Macro closeup of forehead optical ToF sensor and septum
     aura_day12_3_design_optical_cutaway.png     # CAD cutaway showing internal VL53L1X board and gasket
@@ -112,6 +119,8 @@ ESP32-S3 GPIO mapping for the carrier board:
 | I2S Speaker BCLK | GPIO 42 | I2S Audio Out | Bit clock line to MAX98357A amplifier |
 | I2S Speaker LRCLK | GPIO 41 | I2S Audio Out | Word select line to MAX98357A amplifier |
 | I2S Speaker DIN | GPIO 21 | I2S Audio Out | Serial PCM audio data to MAX98357A amplifier |
+| Battery Voltage Sense | GPIO 3 | ADC1_CH2 | 100k/100k precision voltage divider (2.0x ratio) |
+| TP4056 Charge Status | GPIO 8 | GPIO In | Active-low charging indicator from TP4056 STAT |
 
 ## Voice and Acoustic Subsystem
 
@@ -148,7 +157,30 @@ All main structural parts are in the cad directory and ready to slice:
    - Layer height: 0.20mm
    - Perimeters: 3 or 4 walls
    - Infill: 25% gyroid
-   - Note: Features 9 precision acoustic sound slots on the lower front skirt, an internal 28mm speaker pocket with sealing gasket ridge, mounting standoffs for the MAX98357A amplifier, and 4x M3 PCB standoffs matching EasyEDA coordinates (64.0mm x 48.0mm).
+   - Note: Features 9 precision acoustic sound slots on the lower front skirt, an internal 28mm speaker pocket with sealing gasket ridge, mounting standoffs for the MAX98357A amplifier, a horizontal 18650 Li-ion battery retaining cradle with snap-fit ribs, rear USB-C charging receptacle cutout, power slide switch pocket, and 4x M3 PCB standoffs matching EasyEDA coordinates (64.0mm x 48.0mm).
+
+## Battery Power and Charging Subsystem
+
+AURA 1 is completely untethered and cordless, powered by an internal rechargeable lithium-ion power stage:
+
+1. 18650 Battery Cell and Retention:
+   - Houses a standard 18650 3.7V 3000mAh cylindrical Li-ion cell seated horizontally across the center-rear floor of the base chassis.
+   - The chassis floor features molded semi-circular cradle ribs and flexible snap-fit retention clips to secure the cell against high-velocity head pan inertia without rattling.
+   - A dedicated rear skirt aperture accommodates a flush USB-C charging port and miniature SPDT slide power switch.
+
+2. Charge Management and Power Architecture:
+   - TP4056 1A constant-current / constant-voltage (CC/CV) lithium charge management IC with internal thermal regulation and automatic recharge threshold.
+   - Powers the high-efficiency Silergy SY8089 synchronous step-down buck converter to step battery voltage (3.2V - 4.2V) to a stable 3.3V logic rail.
+   - Dedicated 470uF low-ESR bulk reservoir capacitor absorbs dynamic current spikes drawn by the three metal-gear servos so the ESP32-S3 microcontroller never experiences brownout resets.
+
+3. Voltage Sensing and Low-Battery Protection (firmware/include/power_mgr.h):
+   - 100k / 100k precision 1% resistor voltage divider connects the battery rail to ESP32-S3 ADC1_CH2 (GPIO 3).
+   - A 50Hz rolling exponential moving average filter (alpha = 0.05) filters out high-frequency servo noise and transient voltage sags.
+   - Multi-segment linear interpolation calculates battery state-of-charge percentage (100% at 4.20V down to 0% at 3.25V).
+   - State machine triggers low-power behaviors:
+     * Normal State (> 3.42V): Full interactive animation, vibrant cyan neck halo.
+     * Low Battery State (3.25V - 3.42V): Robot enters tired mood (`MOOD_LOW_BATTERY`), cocks head down, eyes droop with sleepy heavy squinting, and neck halo pulses a gentle amber warning.
+     * Critical Cutoff (< 3.25V): Disables servo PWM signals, saves perception state, and enters deep sleep to prevent battery over-discharge damage.
 
 2. Head Skull (`aura_skull_head_printready.stl`):
    - Material: Tough PLA or PETG (White)
