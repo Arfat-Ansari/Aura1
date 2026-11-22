@@ -26,6 +26,7 @@ Aura1/
     aura_skull_head_printready.stl        # Head skull frame with eye recesses and ToF mount
     aura_servo_bracket_printready.stl     # Internal neck servo mounting plate with M2 screw bosses
     aura_turntable_bearing_printready.stl # 608ZZ bearing turntable with central wire pass-through
+    aura_face_visor_printready.stl        # Magnetic front face visor cowling with 4x magnet pockets
     aura_assembly.blend                   # Full Blender 4.2 parametric 3D CAD assembly
   firmware/
     platformio.ini                        # PlatformIO configuration for ESP32-S3
@@ -40,9 +41,16 @@ Aura1/
       audio_dsp.h                       # INMP441 I2S microphone sampling and FFT
       gesture_engine.h                  # ST VL53L1X multi-zone optical gesture and peek-a-boo
       power_mgr.h                       # 18650 Li-ion battery ADC monitoring and power states
+      behavior_engine.h                 # Autonomous desktop personality and sleep/wake engine
     src/
       main.cpp                          # Dual-core FreeRTOS main loop
   images/
+    aura_day14_1_color_visor_showcase.png       # Full finished robot showcase with magnetic visor
+    aura_day14_2_color_visor_detachment.png     # Perspective view showing magnetic snap pins and modularity
+    aura_day14_3_color_deep_sleep_pose.png      # Color render of autonomous deep sleep pose with drooped head
+    aura_day14_4_design_visor_front_wireframe.png # CAD front engineering layout of bezels and apertures
+    aura_day14_5_design_magnet_pockets_iso.png  # CAD rear view of visor magnet pockets and locating pins
+    aura_day14_6_design_exploded_head_assembly.png # CAD exploded view of skull, screens, magnets, and visor
     aura_day13_1_color_untethered_showcase.png  # Full untethered cordless robot showcase render
     aura_day13_2_color_usbc_rear_closeup.png    # Macro closeup of rear USB-C charging port and power switch
     aura_day13_3_color_low_battery_reaction.png # Color render of low-battery tired eye droop and amber warning
@@ -242,6 +250,40 @@ AURA 1 uses the multi-zone Region of Interest (ROI) capabilities of the ST VL53L
    - Layer height: 0.16mm
    - Infill: 40% gyroid for rigid bearing retention
    - Note: Houses the central 608ZZ radial bearing with a 6.0mm hollow center channel for display and sensor wiring pass-through.
+
+5. Magnetic Face Visor Cowling (`aura_face_visor_printready.stl`):
+   - Material: Matte Dark PETG or Tough PLA
+   - Layer height: 0.16mm
+   - Infill: 30% gyroid
+   - Note: Features 4x internal neodymium magnet pockets (3.0mm diameter x 1.5mm depth) for tool-less snap-fit removal, twin 26.5mm circular eye bezels with 45-degree chamfers, VL53L1X laser aperture slot, and dual microphone acoustic horn entry ports.
+
+## Magnetic Face Visor and Cosmetic Cowling
+
+A key aesthetic and functional milestone of AURA 1 is the modular front faceplate:
+
+1. Tool-Less Magnetic Snap Retention:
+   - The front face visor (`aura_face_visor_printready.stl`) mounts using four miniature nickel-plated N52 neodymium disc magnets (3mm diameter x 1.5mm thickness) pressed into matching rear cavities on the visor and front bosses on the skull frame.
+   - Two tapered self-centering locating guide pins on the rear face eliminate rotational shear and ensure instant alignment without tools or exposed screw heads.
+
+2. Optical Masking and Acoustic Horn Ports:
+   - The GC9A01 circular IPS display modules use rectangular PCB carrier boards with exposed mounting ears. The visor provides 26.5mm circular openings with 45-degree inward chamfered bezels, seamlessly hiding the board corners while leaving the full active circular display area exposed.
+   - A 16mm x 7.5mm pill-slot cutout aligns with the forehead VL53L1X ToF laser sensor and its anti-crosstalk septum.
+   - Two 1.8mm acoustic horn ports with 45-degree sound entry chamfers route external audio cleanly to the internal INMP441 MEMS microphones.
+
+## Autonomous Desktop Companion Behavior Engine
+
+In addition to interactive reactive states, AURA 1 implements an autonomous desktop personality and tiered sleep cycle (`firmware/include/behavior_engine.h`):
+
+1. Ambient Curiosity and Fidgets (`BEHAVIOR_IDLE_EXPLORE` / `BEHAVIOR_FIDGET`):
+   - When no direct user input is detected, the robot executes organic micro-saccades, glancing across the desk, stretching its neck in subtle pan/pitch offsets (-14 to +14 degrees), and observing its environment.
+
+2. Tiered Sleep Cycle (`BEHAVIOR_DROWSY` / `BEHAVIOR_DEEP_SLEEP`):
+   - After 2 minutes of idle inactivity, the robot transitions into drowsy mode: eyelids droop by 50-80%, the head sags downward (-6 to -14 degrees), and the neck halo dims into a soft indigo glow.
+   - After 4 minutes of inactivity, the robot enters deep sleep: eye screens display restful shut curves, head rests in full low posture, and the 12-LED neck halo pulses in a slow 0.1Hz sinusoidal cyan breathing wave.
+
+3. Startled Wake Reflex (`BEHAVIOR_STARTLED_WAKE`):
+   - High-energy audio transients (desk knock, clap, loud speech via INMP441) or sudden proximity deltas (> 180mm sudden hand approach via VL53L1X) instantly wake the robot.
+   - The head snaps up (+12 degrees pitch) within 15ms, eyes dilate wide (1.35x), the halo flashes alert gold, and an audible wake chime sounds before settling into active engagement.
 
 ## Building and Flashing Firmware
 
