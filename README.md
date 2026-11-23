@@ -27,6 +27,7 @@ Aura1/
     aura_servo_bracket_printready.stl     # Internal neck servo mounting plate with M2 screw bosses
     aura_turntable_bearing_printready.stl # 608ZZ bearing turntable with central wire pass-through
     aura_face_visor_printready.stl        # Magnetic front face visor cowling with 4x magnet pockets
+    aura_skull_cap_printready.stl         # Upper skull dome cap with touch pad mount and rear vents
     aura_assembly.blend                   # Full Blender 4.2 parametric 3D CAD assembly
   firmware/
     platformio.ini                        # PlatformIO configuration for ESP32-S3
@@ -45,6 +46,12 @@ Aura1/
     src/
       main.cpp                          # Dual-core FreeRTOS main loop
   images/
+    aura_day15_1_color_petting_purr_showcase.png # Full robot in happy petting state with amber glow
+    aura_day15_2_color_skull_dome_rear_iso.png  # Color 3/4 rear isometric view of skull dome & vents
+    aura_day15_3_color_head_complete_assembly.png # Beauty perspective shot of fully enclosed head
+    aura_day15_4_design_skull_cap_wireframe.png # CAD top elevation & curvature analysis of skull dome
+    aura_day15_5_design_touch_pad_cutaway.png   # CAD cutaway showing internal capacitive copper sensor
+    aura_day15_6_design_head_snap_fit_iso.png   # CAD exploded view of 4x snap tabs and skull interface
     aura_day14_1_color_visor_showcase.png       # Full finished robot showcase with magnetic visor
     aura_day14_2_color_visor_detachment.png     # Perspective view showing magnetic snap pins and modularity
     aura_day14_3_color_deep_sleep_pose.png      # Color render of autonomous deep sleep pose with drooped head
@@ -257,6 +264,12 @@ AURA 1 uses the multi-zone Region of Interest (ROI) capabilities of the ST VL53L
    - Infill: 30% gyroid
    - Note: Features 4x internal neodymium magnet pockets (3.0mm diameter x 1.5mm depth) for tool-less snap-fit removal, twin 26.5mm circular eye bezels with 45-degree chamfers, VL53L1X laser aperture slot, and dual microphone acoustic horn entry ports.
 
+6. Upper Skull Dome Cap (`aura_skull_cap_printready.stl`):
+   - Material: Tough White PLA or PETG
+   - Layer height: 0.16mm
+   - Infill: 25% gyroid
+   - Note: Encloses the top crown and rear of the head with 4x internal snap-fit tabs, internal 42x34mm capacitive touch foil mounting pocket, and rear horizontal ventilation slots.
+
 ## Magnetic Face Visor and Cosmetic Cowling
 
 A key aesthetic and functional milestone of AURA 1 is the modular front faceplate:
@@ -284,6 +297,24 @@ In addition to interactive reactive states, AURA 1 implements an autonomous desk
 3. Startled Wake Reflex (`BEHAVIOR_STARTLED_WAKE`):
    - High-energy audio transients (desk knock, clap, loud speech via INMP441) or sudden proximity deltas (> 180mm sudden hand approach via VL53L1X) instantly wake the robot.
    - The head snaps up (+12 degrees pitch) within 15ms, eyes dilate wide (1.35x), the halo flashes alert gold, and an audible wake chime sounds before settling into active engagement.
+
+## Upper Skull Dome and Capacitive Touch Petting Subsystem
+
+AURA 1 features an organic top skull dome shell that fully encloses the head while providing interactive tactile petting sensing (`firmware/include/petting_purr.h`):
+
+1. Curved Head Enclosure (`aura_skull_cap_printready.stl`):
+   - The dome mates seamlessly with the front magnetic face visor and skull frame, completing the head enclosure without visible external hardware.
+   - Four internal snap-fit tabs lock into matching detents on the skull frame rim for tool-free assembly and maintenance.
+   - Three rear horizontal ventilation slots (32mm x 2mm) provide thermal convective exhaust for the internal ESP32-S3 and GC9A01 LCD driver circuits.
+
+2. Capacitive Touch Sensing and Baseline Calibration:
+   - A 42mm x 34mm copper foil electrode is secured inside a recessed mounting pocket directly beneath the 2.2mm top skull dome wall, connected to ESP32-S3 Touch Pad GPIO 1.
+   - Startup calibration takes 25 averaged readings to establish ambient baseline capacitance, with an adaptive low-pass filter (alpha = 0.22) and slow baseline tracking (0.003 adaptation rate) to compensate for ambient humidity and temperature changes.
+
+3. Haptic Purr Flutter and Expressive Reactions:
+   - When a human hand strokes the top of the skull dome, the touch reading drops by > 28%, triggering the petting engine.
+   - The neck pitch and roll servos execute a 25Hz micro-dither flutter that ramps smoothly from +/-0.65 degrees up to +/-1.85 degrees over 1.5 seconds of sustained petting, creating a physical vibration that feels like a cat purring beneath the user hand.
+   - The dual GC9A01 circular screens animate into happy anime squint arches, the 12-LED neck halo pulses warm golden-amber, and the I2S sound synthesizer emits a gentle warbling purr.
 
 ## Building and Flashing Firmware
 
