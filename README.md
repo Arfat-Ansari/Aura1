@@ -270,6 +270,33 @@ AURA 1 uses the multi-zone Region of Interest (ROI) capabilities of the ST VL53L
    - Infill: 25% gyroid
    - Note: Encloses the top crown and rear of the head with 4x internal snap-fit tabs, internal 42x34mm capacitive touch foil mounting pocket, and rear horizontal ventilation slots.
 
+## Bill of Materials and Real-World Manufacturing Budget
+
+AURA 1 is designed to be affordable to build for high-school students, makers, and hobbyists. Below is the itemized cost breakdown comparing in-house 3D printing against ordering parts from commercial 3D printing service bureaus in India.
+
+### 1. 3D Printing Enclosure and Gimbals (5 Custom Parts)
+- Total net model mass: ~182g (~220g including supports, brim, and purge).
+- Path A - Commercial Online 3D Printing Service Bureau in India (Robu 3D / Think3D / local bureaus):
+  * Material rate: Rs 7.50 to Rs 9.50 per gram for Tough PLA / PETG (~Rs 1,700 base).
+  * 18% GST and tracked courier delivery included.
+  * Turnkey commercial 3D printing cost: Rs 1,600 to Rs 2,100 INR (~$22 to $25 USD).
+- Path B - Self-Printed at Home or Maker Lab:
+  * Consumes ~220g from a 1kg spool of Tough PLA / PETG (Rs 1,150 per spool).
+  * Pro-rated material cost: Rs 260 to Rs 320 INR (~$3.50 USD).
+
+### 2. Itemized Electronics and Hardware Sourcing (Retail India)
+- Compute and Displays: ESP32-S3 DevKit N16R8 (Rs 650) + 2x GC9A01 1.28-inch circular IPS displays (Rs 988) = Rs 1,638 INR ($19.55 USD).
+- Motion and Kinematics: 3x TowerPro MG90S metal gear micro servos (Rs 780) + 608ZZ precision bearing (Rs 73) + M2 brass ball linkage tie rods (Rs 240) = Rs 1,093 INR ($13.00 USD).
+- Sensors and Perception: ST VL53L1X time-of-flight laser ranging module (Rs 589) + 2x INMP441 I2S MEMS microphones (Rs 280) + copper touch foil electrode (Rs 60) = Rs 929 INR ($11.05 USD).
+- Audio and Halo Lighting: 28mm 4-ohm 2W neodymium acoustic speaker (Rs 95) + MAX98357A I2S 3.2W amplifier (Rs 289) + WS2812B 12-LED RGB ring (Rs 110) = Rs 494 INR ($5.90 USD).
+- Battery and Power Subsystem: 18650 3.7V Li-ion cell (Rs 260) + TP4056 Type-C charger (Rs 25) + mini SPDT slide switch (Rs 15) + mini 3.3V 2A buck regulator (Rs 175) + 470uF reservoir capacitor and divider resistors (Rs 45) = Rs 520 INR ($6.23 USD).
+- Fasteners, Magnets, and Wiring: 8x N52 neodymium disc magnets (Rs 90) + M2/M3 stainless screws and brass heat-set inserts (Rs 180) + 30 AWG silicone wire and JST connectors (Rs 120) = Rs 390 INR ($4.68 USD).
+- Total Hardware and Electronics: Rs 5,064 INR ($60.40 USD).
+
+### 3. Total Project Cost Summary
+- Self-Printed (Pro-rated material): Rs 5,490 INR (~$65.50 USD).
+- Commercial 3D Printing Service Bureau (Turnkey India): Rs 7,064 INR (~$84.50 USD).
+
 ## Magnetic Face Visor and Cosmetic Cowling
 
 A key aesthetic and functional milestone of AURA 1 is the modular front faceplate:
