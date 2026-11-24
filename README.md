@@ -28,6 +28,7 @@ Aura1/
     aura_turntable_bearing_printready.stl # 608ZZ bearing turntable with central wire pass-through
     aura_face_visor_printready.stl        # Magnetic front face visor cowling with 4x magnet pockets
     aura_skull_cap_printready.stl         # Upper skull dome cap with touch pad mount and rear vents
+    aura_halo_diffuser_printready.stl     # Neck turntable halo light optical diffuser ring
     aura_assembly.blend                   # Full Blender 4.2 parametric 3D CAD assembly
   firmware/
     platformio.ini                        # PlatformIO configuration for ESP32-S3
@@ -43,9 +44,16 @@ Aura1/
       gesture_engine.h                  # ST VL53L1X multi-zone optical gesture and peek-a-boo
       power_mgr.h                       # 18650 Li-ion battery ADC monitoring and power states
       behavior_engine.h                 # Autonomous desktop personality and sleep/wake engine
+      web_dashboard.h                   # Wireless SoftAP telemetry and calibration dashboard
     src/
       main.cpp                          # Dual-core FreeRTOS main loop
   images/
+    aura_day16_1_color_halo_diffuser_showcase.png # Full robot with frosted halo diffuser glowing neon cyan
+    aura_day16_2_color_dashboard_phone_view.png # Macro beauty shot of robot on desk next to phone UI
+    aura_day16_3_color_live_trim_pose.png       # Robot responding to wireless calibration with purple aura
+    aura_day16_4_design_diffuser_ring_wireframe.png # CAD elevation & optical wall thickness of diffuser ring
+    aura_day16_5_design_neck_turntable_diffuser_cutaway.png # CAD cutaway showing LED ring inside channel
+    aura_day16_6_design_exploded_chassis_diffuser_iso.png # Exploded CAD view of base, ring, diffuser, bearing
     aura_day15_1_color_petting_purr_showcase.png # Full robot in happy petting state with amber glow
     aura_day15_2_color_skull_dome_rear_iso.png  # Color 3/4 rear isometric view of skull dome & vents
     aura_day15_3_color_head_complete_assembly.png # Beauty perspective shot of fully enclosed head
@@ -270,6 +278,12 @@ AURA 1 uses the multi-zone Region of Interest (ROI) capabilities of the ST VL53L
    - Infill: 25% gyroid
    - Note: Encloses the top crown and rear of the head with 4x internal snap-fit tabs, internal 42x34mm capacitive touch foil mounting pocket, and rear horizontal ventilation slots.
 
+7. Neck Halo Light Diffuser Ring (`aura_halo_diffuser_printready.stl`):
+   - Material: Translucent or Frosted White PETG
+   - Layer height: 0.16mm (concentric wall alignment for maximum light diffusion)
+   - Infill: 100% solid thin-wall (1.4mm thickness)
+   - Note: Encloses the 12x WS2812B RGB halo ring around the neck turntable with a convex toroidal diffusing crown, blending point-source glare into a continuous 360-degree neon aura.
+
 ## Bill of Materials and Real-World Manufacturing Budget
 
 AURA 1 is designed to be affordable to build for high-school students, makers, and hobbyists. Below is the itemized cost breakdown comparing in-house 3D printing against ordering parts from commercial 3D printing service bureaus in India.
@@ -342,6 +356,22 @@ AURA 1 features an organic top skull dome shell that fully encloses the head whi
    - When a human hand strokes the top of the skull dome, the touch reading drops by > 28%, triggering the petting engine.
    - The neck pitch and roll servos execute a 25Hz micro-dither flutter that ramps smoothly from +/-0.65 degrees up to +/-1.85 degrees over 1.5 seconds of sustained petting, creating a physical vibration that feels like a cat purring beneath the user hand.
    - The dual GC9A01 circular screens animate into happy anime squint arches, the 12-LED neck halo pulses warm golden-amber, and the I2S sound synthesizer emits a gentle warbling purr.
+
+## Wireless Web Telemetry and Companion Calibration Dashboard
+
+To eliminate repeated USB tethering and firmware reflashing during kinematics tuning, AURA 1 hosts an onboard zero-install web interface (`firmware/include/web_dashboard.h`):
+
+1. SoftAP Wireless Architecture:
+   - The ESP32-S3 broadcasts its own independent Wi-Fi Access Point (`AURA-1-COMPANION`, default IP: `192.168.4.1`). Any phone, tablet, or laptop can connect directly without requiring a local router or internet access.
+   - A responsive dark-mode HTML/JS single-page application is stored directly in internal flash memory (PROGMEM) and delivered via a lightweight asynchronous web server.
+
+2. Real-Time Telemetry and Expressive Testing:
+   - Live sensor telemetry (battery voltage, battery percentage, VL53L1X laser distance in millimeters, sound level, and current emotional state) updates over JSON REST polling at 400ms intervals.
+   - Interactive touch buttons allow testing emotions (Happy Purr, Curious Head Tilt, Startle Reflex, Sleep Mode) and custom halo aura colors on demand.
+
+3. Wireless 3-DOF Kinematic Calibration:
+   - Dedicated live sliders allow real-time zero-point trimming for pan, pitch, and roll servos (-15.0 to +15.0 degrees) without restarting the robot.
+   - Trim offsets can be saved permanently to non-volatile flash storage with a single tap.
 
 ## Building and Flashing Firmware
 
