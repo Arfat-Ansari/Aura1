@@ -29,6 +29,7 @@ Aura1/
     aura_face_visor_printready.stl        # Magnetic front face visor cowling with 4x magnet pockets
     aura_skull_cap_printready.stl         # Upper skull dome cap with touch pad mount and rear vents
     aura_halo_diffuser_printready.stl     # Neck turntable halo light optical diffuser ring
+    aura_torso_cowl_printready.stl        # Torso mid-body cosmetic enclosure jacket with cooling louvers
     aura_assembly.blend                   # Full Blender 4.2 parametric 3D CAD assembly
   firmware/
     platformio.ini                        # PlatformIO configuration for ESP32-S3
@@ -46,8 +47,14 @@ Aura1/
       behavior_engine.h                 # Autonomous desktop personality and sleep/wake engine
       web_dashboard.h                   # Wireless SoftAP telemetry and calibration dashboard
     src/
-      main.cpp                          # Dual-core FreeRTOS main loop
+      main.cpp                          # Dual-core FreeRTOS main loop and task scheduler
   images/
+    aura_day17_1_color_dualcore_showcase.png # Full robot in active dual-core FreeRTOS multitasking pose
+    aura_day17_2_color_torso_cowl_closeup.png # Macro closeup of torso mid-body cowl and cooling louvers
+    aura_day17_3_color_freertos_task_telemetry.png # Robot next to telemetry monitor showing Core 0 and Core 1 load
+    aura_day17_4_design_torso_cowl_wireframe.png # CAD technical elevation view of torso cowl geometry
+    aura_day17_5_design_dualcore_task_architecture.png # CAD cutaway view showing internal dual-core carrier PCB
+    aura_day17_6_design_exploded_torso_assembly.png # Exploded CAD view of torso chassis, cowl, diffuser, turntable
     aura_day16_1_color_halo_diffuser_showcase.png # Full robot with frosted halo diffuser glowing neon cyan
     aura_day16_2_color_dashboard_phone_view.png # Macro beauty shot of robot on desk next to phone UI
     aura_day16_3_color_live_trim_pose.png       # Robot responding to wireless calibration with purple aura
@@ -284,6 +291,13 @@ AURA 1 uses the multi-zone Region of Interest (ROI) capabilities of the ST VL53L
    - Infill: 100% solid thin-wall (1.4mm thickness)
    - Note: Encloses the 12x WS2812B RGB halo ring around the neck turntable with a convex toroidal diffusing crown, blending point-source glare into a continuous 360-degree neon aura.
 
+8. Torso Mid-Body Outer Shell (`aura_torso_cowl_printready.stl`):
+   - Material: Tough White PLA or PETG
+   - Layer height: 0.20mm
+   - Perimeters: 3 walls
+   - Infill: 20% gyroid
+   - Note: Wraps the midsection between the chassis base tub and halo diffuser ring with 45-degree angled side cooling louvers for ESP32-S3 and buck converter thermal venting, rear USB-C and power service aperture, and 4x internal snap tabs.
+
 ## Bill of Materials and Real-World Manufacturing Budget
 
 AURA 1 is designed to be affordable to build for high-school students, makers, and hobbyists. Below is the itemized cost breakdown comparing in-house 3D printing against ordering parts from commercial 3D printing service bureaus in India.
@@ -372,6 +386,27 @@ To eliminate repeated USB tethering and firmware reflashing during kinematics tu
 3. Wireless 3-DOF Kinematic Calibration:
    - Dedicated live sliders allow real-time zero-point trimming for pan, pitch, and roll servos (-15.0 to +15.0 degrees) without restarting the robot.
    - Trim offsets can be saved permanently to non-volatile flash storage with a single tap.
+
+## Dual-Core FreeRTOS Master Scheduler Architecture
+
+To prevent high-bandwidth SPI DMA eye rendering (60 FPS across two 240x240 circular IPS displays) from starving the I2C sensor pipeline or dropping audio packets, AURA 1 splits firmware execution across both Xtensa LX7 240MHz cores (`firmware/src/main.cpp`):
+
+1. CORE 0 (Priority 4 - Perception, Communications, and Telemetry):
+   - 50Hz Sensor Engine (`sensorEngine.update()`): Non-blocking polling of the ST VL53L1X time-of-flight laser ranging sensor, optical gestures, and INMP441 digital MEMS microphone audio peaks.
+   - Capacitive Touch Petting: Fast sampling of top skull foil electrode with adaptive ambient humidity tracking.
+   - Power Management (`powerManager.update()`): 18650 Li-ion battery voltage monitoring via ADC1_CH2 and TP4056 hardware charging pin state.
+   - SoftAP Web Server (`webDashboard.update()`): Serves the dark-mode configuration web app, handles WebSocket/REST client telemetry streaming, and updates kinematic trim values.
+   - Thread-Safe Mutex State Publishing: Writes a synchronized snapshot of sensor and power readings into `sharedSensorData` using FreeRTOS binary mutex protection (`xSemaphoreTake(sensorMutex, 4ms)`).
+
+2. CORE 1 (Priority 5 - Real-Time Visuals, Motion, and Actuation):
+   - Dual 60 FPS Eye Rendering (`eyeEngine.update()`): Zero-copy SPI DMA graphics pipeline with dynamic saccades, pupil dilation, dynamic blinking, and happy squint animations.
+   - 3-DOF Kinematic Pipeline (`kinematics.update()`): Spherical pushrod geometry with cubic ease-in/out motion smoothing and haptic purr dither injection.
+   - Autonomous Behavior Engine (`behaviorEngine.update()`): Ambient desktop exploration, idle fidgets, tiered sleep cycle (drowsy and deep sleep), and startled wake reflex.
+   - Emotion Engine (`emotionEngine.processPerception()`): Real-time perceptual state machine driving WS2812B halo lighting and procedural I2S audio vocal synthesis.
+
+3. Concurrency Safety and Watchdog Recovery:
+   - Lock-Free / Mutex Architecture: Core 1 reads from `sharedSensorData` with a non-blocking 3ms timeout, ensuring frame rendering is never delayed by sensor bus stalls.
+   - FreeRTOS Task Watchdog Timer (TWDT): Both tasks subscribe to the hardware watchdog with a 3.0-second panic reset timeout, providing automatic recovery against transient I2C bus locks.
 
 ## Building and Flashing Firmware
 
