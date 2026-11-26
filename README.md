@@ -30,7 +30,19 @@ Aura1/
     aura_skull_cap_printready.stl         # Upper skull dome cap with touch pad mount and rear vents
     aura_halo_diffuser_printready.stl     # Neck turntable halo light optical diffuser ring
     aura_torso_cowl_printready.stl        # Torso mid-body cosmetic enclosure jacket with cooling louvers
+    aura_cable_guides_printready.stl      # Turntable neck cable harness guide and strain relief sleeve
     aura_assembly.blend                   # Full Blender 4.2 parametric 3D CAD assembly
+  hardware/
+    circuit_architecture.md               # Complete electrical power and PCB design specification
+    pcb/
+      aura_carrier_board.kicad_pcb        # Production KiCad 2-layer carrier board layout (0 DRC)
+      aura_carrier_board.epro             # EasyEDA Pro project file
+      jlcpcb_bom.csv                      # SMT manufacturing BOM with LCSC part numbers
+      jlcpcb_cpl.csv                      # SMT Pick-and-Place component centroid coordinates
+      aura_pcb_layout_2d.png              # 2D PCB layout blueprint
+      drc_report_final.txt                # Zero DRC verification report
+    schematics/
+      aura_schematic_full.png             # Complete system circuit schematic diagram
   firmware/
     platformio.ini                        # PlatformIO configuration for ESP32-S3
     include/
@@ -45,10 +57,17 @@ Aura1/
       gesture_engine.h                  # ST VL53L1X multi-zone optical gesture and peek-a-boo
       power_mgr.h                       # 18650 Li-ion battery ADC monitoring and power states
       behavior_engine.h                 # Autonomous desktop personality and sleep/wake engine
+      exploration_engine.h              # Autonomous environmental exploration and ambient gaze engine
       web_dashboard.h                   # Wireless SoftAP telemetry and calibration dashboard
     src/
       main.cpp                          # Dual-core FreeRTOS main loop and task scheduler
   images/
+    aura_day18_1_color_exploration_showcase.png # Robot in active inquisitive environmental exploration pose
+    aura_day18_2_color_cable_guide_closeup.png # Macro beauty closeup of turntable cable guide sleeve
+    aura_day18_3_color_ambient_tracking_pose.png # Robot adapting to room lighting with wide curious gaze
+    aura_day18_4_design_cable_guide_wireframe.png # CAD technical elevation of cable guide bellmouth and flange
+    aura_day18_5_design_neck_wiring_cutaway.png # CAD cutaway showing wire harness protected inside 608ZZ bore
+    aura_day18_6_design_exploded_neck_assembly.png # Exploded CAD view of base, bearing, guide sleeve, turntable
     aura_day17_1_color_dualcore_showcase.png # Full robot in active dual-core FreeRTOS multitasking pose
     aura_day17_2_color_torso_cowl_closeup.png # Macro closeup of torso mid-body cowl and cooling louvers
     aura_day17_3_color_freertos_task_telemetry.png # Robot next to telemetry monitor showing Core 0 and Core 1 load
@@ -298,6 +317,13 @@ AURA 1 uses the multi-zone Region of Interest (ROI) capabilities of the ST VL53L
    - Infill: 20% gyroid
    - Note: Wraps the midsection between the chassis base tub and halo diffuser ring with 45-degree angled side cooling louvers for ESP32-S3 and buck converter thermal venting, rear USB-C and power service aperture, and 4x internal snap tabs.
 
+9. Turntable Neck Cable Harness Guide (`aura_cable_guides_printready.stl`):
+   - Material: Tough PLA or PETG (Black or Slate)
+   - Layer height: 0.16mm
+   - Perimeters: 4 walls (for rigid strain relief)
+   - Infill: 40% gyroid
+   - Note: Sleeves cleanly through the 8.0mm bore of the 608ZZ radial bearing with smooth 1.0mm bell-mouthed entry and exit flares to prevent wire chafing during continuous 180-degree pan rotation, featuring an upper mounting collar with zip-tie anchor slots and lower retaining shoulder.
+
 ## Bill of Materials and Real-World Manufacturing Budget
 
 AURA 1 is designed to be affordable to build for high-school students, makers, and hobbyists. Below is the itemized cost breakdown comparing in-house 3D printing against ordering parts from commercial 3D printing service bureaus in India.
@@ -407,6 +433,39 @@ To prevent high-bandwidth SPI DMA eye rendering (60 FPS across two 240x240 circu
 3. Concurrency Safety and Watchdog Recovery:
    - Lock-Free / Mutex Architecture: Core 1 reads from `sharedSensorData` with a non-blocking 3ms timeout, ensuring frame rendering is never delayed by sensor bus stalls.
    - FreeRTOS Task Watchdog Timer (TWDT): Both tasks subscribe to the hardware watchdog with a 3.0-second panic reset timeout, providing automatic recovery against transient I2C bus locks.
+
+## Autonomous Environmental Exploration and Ambient Gaze Engine
+
+To bring AURA 1 to life as an authentic curious desktop companion when not directly interacting with the user, the firmware runs an autonomous environmental exploration engine (`firmware/include/exploration_engine.h`):
+
+1. Desktop Saccade and Fixation Waypoints:
+   - Evaluates a dynamic triangular probability distribution across the desktop work field (-35.0 to +35.0 degrees pan, -12.0 to +15.0 degrees pitch), favoring natural workspace gaze points.
+   - Organic fixation dwells range from 800ms to 2400ms before smoothly saccading to the next waypoint.
+   - When inspecting nearby objects (< 450mm via VL53L1X), calculates an inquisitive roll tilt (-8.0 to +8.0 degrees) to simulate curious head-cocking.
+
+2. Ambient Room Illumination Adaptation:
+   - Continuously monitors the ambient photon count rate from the ST VL53L1X time-of-flight sensor (`ambientCount`).
+   - Automatically modulates the dual GC9A01 LCD backlight brightness (GPIO 21 PWM) from 35% in dark rooms to 100% in direct sunlight.
+   - Adapts eye pupil dilation biologically: dilating wide (1.30x) in dim evening ambient light and contracting (0.75x) in bright room lighting.
+
+3. Acoustic Orientation Lock and Thermal Governor:
+   - Localized directional sound transients from the stereo INMP441 microphones instantly interrupt ambient exploration, snapping the robot head toward the sound source and holding gaze for 1.8 to 3.5 seconds.
+   - A cumulative angular motion tracker automatically enforces 1.5-second peaceful rests every 350 degrees of continuous travel, keeping servo motor core temperatures strictly below 45 deg C.
+
+## Production Carrier Board PCB and Manufacturing Hardware
+
+The complete electrical design and verified manufacturing files for the AURA 1 circular carrier motherboard are provided in the `hardware/` directory:
+
+1. Motherboard Specifications (`hardware/pcb/`):
+   - Circular 98.0mm diameter form factor seated directly inside the lower base chassis tub.
+   - 4x M3 mounting hole pattern on a 64.0mm x 48.0mm grid matching standard PCB standoffs.
+   - Fully routed 2-layer design passing Design Rule Check with 0 errors (`hardware/pcb/drc_report_final.txt`).
+   - Factory SMT assembly files ready for JLCPCB production: Bill of Materials with verified LCSC component part numbers (`hardware/pcb/jlcpcb_bom.csv`) and Pick-and-Place component centroid coordinates (`hardware/pcb/jlcpcb_cpl.csv`).
+
+2. Electrical Power and Signal Integrity (`hardware/circuit_architecture.md`):
+   - Dedicated Silergy SY8089 2.0A synchronous step-down buck converter stepping battery voltage (3.2V - 4.2V) to a stable 3.3V logic rail with under 15mV peak-to-peak ripple.
+   - 470uF low-ESR bulk electrolytic reservoir capacitor isolating the ESP32-S3 and displays from high-stall servo inductive current spikes.
+   - TVS diode electrostatic clamping and Schottky reverse polarity protection on the USB-C input rail.
 
 ## Building and Flashing Firmware
 

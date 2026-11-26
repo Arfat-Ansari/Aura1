@@ -1,0 +1,3410 @@
+{
+  "version": "1.0.0",
+  "type": "EasyEDA_Pro_PCB_Project",
+  "project": {
+    "title": "AURA-1 Monolithic Carrier Board",
+    "author": "Auralious",
+    "description": "Autonomous Cybernetic Desk Companion Dual-Core Carrier Motherboard",
+    "shape": {
+      "type": "Circle",
+      "diameter": 98.0,
+      "center": [
+        0,
+        0
+      ]
+    },
+    "layers": [
+      "TopLayer",
+      "BottomLayer",
+      "TopSilkLayer",
+      "BottomSilkLayer"
+    ],
+    "drc_status": "PASS_0_ERRORS",
+    "components_count": 17,
+    "routed_tracks_count": 126,
+    "vias_count": 85,
+    "components": {
+      "U1": {
+        "name": "ESP32-S3-WROOM-1-N16R8",
+        "pos": [
+          0.0,
+          6.0
+        ],
+        "width": 18.0,
+        "height": 25.5,
+        "pins": {
+          "1": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              -9.0,
+              11.0
+            ]
+          },
+          "2": {
+            "name": "3V3",
+            "net": "+3V3",
+            "rel": [
+              -9.0,
+              9.73
+            ]
+          },
+          "3": {
+            "name": "EN",
+            "net": "MCU_RST",
+            "rel": [
+              -9.0,
+              8.46
+            ]
+          },
+          "4": {
+            "name": "IO4",
+            "net": "SERVO_PAN_PWM",
+            "rel": [
+              -9.0,
+              7.19
+            ]
+          },
+          "5": {
+            "name": "IO5",
+            "net": "SERVO_TILT_L_PWM",
+            "rel": [
+              -9.0,
+              5.92
+            ]
+          },
+          "6": {
+            "name": "IO6",
+            "net": "SERVO_TILT_R_PWM",
+            "rel": [
+              -9.0,
+              4.65
+            ]
+          },
+          "7": {
+            "name": "IO7",
+            "net": "I2S_DIN",
+            "rel": [
+              -9.0,
+              3.38
+            ]
+          },
+          "8": {
+            "name": "IO15",
+            "net": "I2S_BCLK",
+            "rel": [
+              -9.0,
+              2.11
+            ]
+          },
+          "9": {
+            "name": "IO16",
+            "net": "I2S_LRCLK",
+            "rel": [
+              -9.0,
+              0.84
+            ]
+          },
+          "10": {
+            "name": "IO17",
+            "net": "IMU_INT1",
+            "rel": [
+              -9.0,
+              -0.43
+            ]
+          },
+          "11": {
+            "name": "IO18",
+            "net": "TOF_INT",
+            "rel": [
+              -9.0,
+              -1.7
+            ]
+          },
+          "12": {
+            "name": "IO8",
+            "net": "USER_BTN_ACTION",
+            "rel": [
+              -9.0,
+              -2.97
+            ]
+          },
+          "13": {
+            "name": "IO19",
+            "net": "USB_D_NEG",
+            "rel": [
+              -9.0,
+              -4.24
+            ]
+          },
+          "14": {
+            "name": "IO20",
+            "net": "USB_D_POS",
+            "rel": [
+              -9.0,
+              -5.51
+            ]
+          },
+          "15": {
+            "name": "IO3",
+            "net": "VBUS_SENSE_ADC",
+            "rel": [
+              -9.0,
+              -6.78
+            ]
+          },
+          "16": {
+            "name": "IO46",
+            "net": "STRAP_LOG",
+            "rel": [
+              -9.0,
+              -8.05
+            ]
+          },
+          "17": {
+            "name": "IO9",
+            "net": "TFT_DC_LEFT",
+            "rel": [
+              -9.0,
+              -9.32
+            ]
+          },
+          "18": {
+            "name": "IO10",
+            "net": "TFT_RST",
+            "rel": [
+              -9.0,
+              -10.59
+            ]
+          },
+          "19": {
+            "name": "IO11",
+            "net": "TFT_MOSI_LEFT",
+            "rel": [
+              -9.0,
+              -11.86
+            ]
+          },
+          "20": {
+            "name": "IO12",
+            "net": "TFT_SCLK_LEFT",
+            "rel": [
+              -7.0,
+              -12.75
+            ]
+          },
+          "21": {
+            "name": "IO13",
+            "net": "TFT_CS_LEFT",
+            "rel": [
+              -5.0,
+              -12.75
+            ]
+          },
+          "22": {
+            "name": "IO14",
+            "net": "TFT_CS_RIGHT",
+            "rel": [
+              -3.0,
+              -12.75
+            ]
+          },
+          "23": {
+            "name": "IO21",
+            "net": "TFT_BL_PWM",
+            "rel": [
+              -1.0,
+              -12.75
+            ]
+          },
+          "24": {
+            "name": "IO47",
+            "net": "I2C_SDA",
+            "rel": [
+              1.0,
+              -12.75
+            ]
+          },
+          "25": {
+            "name": "IO48",
+            "net": "I2C_SCL",
+            "rel": [
+              3.0,
+              -12.75
+            ]
+          },
+          "26": {
+            "name": "IO45",
+            "net": "STRAP_VDD",
+            "rel": [
+              5.0,
+              -12.75
+            ]
+          },
+          "27": {
+            "name": "IO0",
+            "net": "BOOT_BTN",
+            "rel": [
+              7.0,
+              -12.75
+            ]
+          },
+          "28": {
+            "name": "IO35",
+            "net": "NC_PSRAM1",
+            "rel": [
+              9.0,
+              -11.86
+            ]
+          },
+          "29": {
+            "name": "IO36",
+            "net": "NC_PSRAM2",
+            "rel": [
+              9.0,
+              -10.59
+            ]
+          },
+          "30": {
+            "name": "IO37",
+            "net": "NC_PSRAM3",
+            "rel": [
+              9.0,
+              -9.32
+            ]
+          },
+          "31": {
+            "name": "IO38",
+            "net": "WS2812B_DATA",
+            "rel": [
+              9.0,
+              -8.05
+            ]
+          },
+          "32": {
+            "name": "IO39",
+            "net": "EXP_GPIO39",
+            "rel": [
+              9.0,
+              -6.78
+            ]
+          },
+          "33": {
+            "name": "IO40",
+            "net": "TFT_SCLK_RIGHT",
+            "rel": [
+              9.0,
+              -5.51
+            ]
+          },
+          "34": {
+            "name": "IO41",
+            "net": "TFT_MOSI_RIGHT",
+            "rel": [
+              9.0,
+              -4.24
+            ]
+          },
+          "35": {
+            "name": "IO42",
+            "net": "TFT_DC_RIGHT",
+            "rel": [
+              9.0,
+              -2.97
+            ]
+          },
+          "36": {
+            "name": "IO44",
+            "net": "TFT_TE_RIGHT",
+            "rel": [
+              9.0,
+              -1.7
+            ]
+          },
+          "37": {
+            "name": "IO43",
+            "net": "TFT_TE_LEFT",
+            "rel": [
+              9.0,
+              -0.43
+            ]
+          },
+          "38": {
+            "name": "IO2",
+            "net": "TOF_XSHUT",
+            "rel": [
+              9.0,
+              0.84
+            ]
+          },
+          "39": {
+            "name": "IO1",
+            "net": "TOUCH_HEAD",
+            "rel": [
+              9.0,
+              2.11
+            ]
+          },
+          "40": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              9.0,
+              11.0
+            ]
+          },
+          "41": {
+            "name": "EPAD",
+            "net": "GND",
+            "rel": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      },
+      "J1": {
+        "name": "USB-C-16P",
+        "pos": [
+          0.0,
+          -42.0
+        ],
+        "width": 9.0,
+        "height": 7.5,
+        "pins": {
+          "1": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              -2.8,
+              1.5
+            ]
+          },
+          "2": {
+            "name": "VBUS",
+            "net": "VBUS_FUSED",
+            "rel": [
+              -2.0,
+              1.5
+            ]
+          },
+          "3": {
+            "name": "CC1",
+            "net": "GND",
+            "rel": [
+              -1.2,
+              1.5
+            ]
+          },
+          "4": {
+            "name": "D+",
+            "net": "USB_D_POS",
+            "rel": [
+              -0.4,
+              1.5
+            ]
+          },
+          "5": {
+            "name": "D-",
+            "net": "USB_D_NEG",
+            "rel": [
+              0.4,
+              1.5
+            ]
+          },
+          "6": {
+            "name": "CC2",
+            "net": "GND",
+            "rel": [
+              1.2,
+              1.5
+            ]
+          },
+          "7": {
+            "name": "VBUS",
+            "net": "+5V_SERVO",
+            "rel": [
+              2.0,
+              1.5
+            ]
+          },
+          "8": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              2.8,
+              1.5
+            ]
+          },
+          "9": {
+            "name": "SHELL1",
+            "net": "GND",
+            "rel": [
+              -4.5,
+              -1.0
+            ]
+          },
+          "10": {
+            "name": "SHELL2",
+            "net": "GND",
+            "rel": [
+              4.5,
+              -1.0
+            ]
+          }
+        }
+      },
+      "U2": {
+        "name": "SY8089AAAC",
+        "pos": [
+          -16.0,
+          -32.0
+        ],
+        "width": 3.0,
+        "height": 3.0,
+        "pins": {
+          "1": {
+            "name": "EN",
+            "net": "VBUS_FUSED",
+            "rel": [
+              -1.3,
+              0.95
+            ]
+          },
+          "2": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              -1.3,
+              0.0
+            ]
+          },
+          "3": {
+            "name": "FB",
+            "net": "+3V3",
+            "rel": [
+              -1.3,
+              -0.95
+            ]
+          },
+          "4": {
+            "name": "SW",
+            "net": "BUCK_SW",
+            "rel": [
+              1.3,
+              -0.95
+            ]
+          },
+          "5": {
+            "name": "IN",
+            "net": "VBUS_FUSED",
+            "rel": [
+              1.3,
+              0.95
+            ]
+          }
+        }
+      },
+      "L1": {
+        "name": "NR4018-2R2M",
+        "pos": [
+          -8.0,
+          -32.0
+        ],
+        "width": 4.0,
+        "height": 4.0,
+        "pins": {
+          "1": {
+            "name": "1",
+            "net": "BUCK_SW",
+            "rel": [
+              -1.8,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "2",
+            "net": "+3V3",
+            "rel": [
+              1.8,
+              0.0
+            ]
+          }
+        }
+      },
+      "C4": {
+        "name": "CAP_470uF_16V",
+        "pos": [
+          18.0,
+          -32.0
+        ],
+        "width": 8.0,
+        "height": 8.0,
+        "pins": {
+          "1": {
+            "name": "+",
+            "net": "+5V_SERVO",
+            "rel": [
+              -1.75,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "-",
+            "net": "GND",
+            "rel": [
+              1.75,
+              0.0
+            ]
+          }
+        }
+      },
+      "J2": {
+        "name": "HDR_SERVO_PAN",
+        "pos": [
+          -20.0,
+          -18.0
+        ],
+        "width": 7.62,
+        "height": 2.54,
+        "pins": {
+          "1": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              -2.54,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "5V",
+            "net": "+5V_SERVO",
+            "rel": [
+              0.0,
+              0.0
+            ]
+          },
+          "3": {
+            "name": "PWM",
+            "net": "SERVO_PAN_PWM",
+            "rel": [
+              2.54,
+              0.0
+            ]
+          }
+        }
+      },
+      "J3": {
+        "name": "HDR_SERVO_TILT_L",
+        "pos": [
+          0.0,
+          -18.0
+        ],
+        "width": 7.62,
+        "height": 2.54,
+        "pins": {
+          "1": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              -2.54,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "5V",
+            "net": "+5V_SERVO",
+            "rel": [
+              0.0,
+              0.0
+            ]
+          },
+          "3": {
+            "name": "PWM",
+            "net": "SERVO_TILT_L_PWM",
+            "rel": [
+              2.54,
+              0.0
+            ]
+          }
+        }
+      },
+      "J4": {
+        "name": "HDR_SERVO_TILT_R",
+        "pos": [
+          20.0,
+          -18.0
+        ],
+        "width": 7.62,
+        "height": 2.54,
+        "pins": {
+          "1": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              -2.54,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "5V",
+            "net": "+5V_SERVO",
+            "rel": [
+              0.0,
+              0.0
+            ]
+          },
+          "3": {
+            "name": "PWM",
+            "net": "SERVO_TILT_R_PWM",
+            "rel": [
+              2.54,
+              0.0
+            ]
+          }
+        }
+      },
+      "J5": {
+        "name": "HDR_DISP_LEFT_SPI2",
+        "pos": [
+          -18.0,
+          36.0
+        ],
+        "width": 20.32,
+        "height": 2.54,
+        "pins": {
+          "1": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              -8.89,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "3V3",
+            "net": "+3V3",
+            "rel": [
+              -6.35,
+              0.0
+            ]
+          },
+          "3": {
+            "name": "SCLK",
+            "net": "TFT_SCLK_LEFT",
+            "rel": [
+              -3.81,
+              0.0
+            ]
+          },
+          "4": {
+            "name": "MOSI",
+            "net": "TFT_MOSI_LEFT",
+            "rel": [
+              -1.27,
+              0.0
+            ]
+          },
+          "5": {
+            "name": "RST",
+            "net": "TFT_RST",
+            "rel": [
+              1.27,
+              0.0
+            ]
+          },
+          "6": {
+            "name": "DC",
+            "net": "TFT_DC_LEFT",
+            "rel": [
+              3.81,
+              0.0
+            ]
+          },
+          "7": {
+            "name": "CS",
+            "net": "TFT_CS_LEFT",
+            "rel": [
+              6.35,
+              0.0
+            ]
+          },
+          "8": {
+            "name": "BL",
+            "net": "+3V3",
+            "rel": [
+              8.89,
+              0.0
+            ]
+          }
+        }
+      },
+      "J6": {
+        "name": "HDR_DISP_RIGHT_SPI3",
+        "pos": [
+          18.0,
+          36.0
+        ],
+        "width": 20.32,
+        "height": 2.54,
+        "pins": {
+          "1": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              -8.89,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "3V3",
+            "net": "+3V3",
+            "rel": [
+              -6.35,
+              0.0
+            ]
+          },
+          "3": {
+            "name": "SCLK",
+            "net": "TFT_SCLK_RIGHT",
+            "rel": [
+              -3.81,
+              0.0
+            ]
+          },
+          "4": {
+            "name": "MOSI",
+            "net": "TFT_MOSI_RIGHT",
+            "rel": [
+              -1.27,
+              0.0
+            ]
+          },
+          "5": {
+            "name": "RST",
+            "net": "TFT_RST",
+            "rel": [
+              1.27,
+              0.0
+            ]
+          },
+          "6": {
+            "name": "DC",
+            "net": "TFT_DC_RIGHT",
+            "rel": [
+              3.81,
+              0.0
+            ]
+          },
+          "7": {
+            "name": "CS",
+            "net": "TFT_CS_RIGHT",
+            "rel": [
+              6.35,
+              0.0
+            ]
+          },
+          "8": {
+            "name": "BL",
+            "net": "+3V3",
+            "rel": [
+              8.89,
+              0.0
+            ]
+          }
+        }
+      },
+      "J7": {
+        "name": "HDR_TOF_VL53L1X",
+        "pos": [
+          0.0,
+          42.0
+        ],
+        "width": 15.24,
+        "height": 2.54,
+        "pins": {
+          "1": {
+            "name": "3V3",
+            "net": "+3V3",
+            "rel": [
+              -6.35,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              -3.81,
+              0.0
+            ]
+          },
+          "3": {
+            "name": "SCL",
+            "net": "I2C_SCL",
+            "rel": [
+              -1.27,
+              0.0
+            ]
+          },
+          "4": {
+            "name": "SDA",
+            "net": "I2C_SDA",
+            "rel": [
+              1.27,
+              0.0
+            ]
+          },
+          "5": {
+            "name": "XSHUT",
+            "net": "TOF_XSHUT",
+            "rel": [
+              3.81,
+              0.0
+            ]
+          },
+          "6": {
+            "name": "INT",
+            "net": "TOF_INT",
+            "rel": [
+              6.35,
+              0.0
+            ]
+          }
+        }
+      },
+      "J8": {
+        "name": "HDR_MIC_INMP441",
+        "pos": [
+          38.0,
+          0.0
+        ],
+        "width": 2.54,
+        "height": 15.24,
+        "pins": {
+          "1": {
+            "name": "3V3",
+            "net": "+3V3",
+            "rel": [
+              0.0,
+              6.35
+            ]
+          },
+          "2": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              0.0,
+              3.81
+            ]
+          },
+          "3": {
+            "name": "SD",
+            "net": "I2S_DIN",
+            "rel": [
+              0.0,
+              1.27
+            ]
+          },
+          "4": {
+            "name": "WS",
+            "net": "I2S_LRCLK",
+            "rel": [
+              0.0,
+              -1.27
+            ]
+          },
+          "5": {
+            "name": "SCK",
+            "net": "I2S_BCLK",
+            "rel": [
+              0.0,
+              -3.81
+            ]
+          },
+          "6": {
+            "name": "L/R",
+            "net": "GND",
+            "rel": [
+              0.0,
+              -6.35
+            ]
+          }
+        }
+      },
+      "J9": {
+        "name": "HDR_ENC_AS5600",
+        "pos": [
+          -38.0,
+          0.0
+        ],
+        "width": 2.54,
+        "height": 10.16,
+        "pins": {
+          "1": {
+            "name": "3V3",
+            "net": "+3V3",
+            "rel": [
+              0.0,
+              3.81
+            ]
+          },
+          "2": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              0.0,
+              1.27
+            ]
+          },
+          "3": {
+            "name": "SCL",
+            "net": "I2C_SCL",
+            "rel": [
+              0.0,
+              -1.27
+            ]
+          },
+          "4": {
+            "name": "SDA",
+            "net": "I2C_SDA",
+            "rel": [
+              0.0,
+              -3.81
+            ]
+          }
+        }
+      },
+      "J11": {
+        "name": "HDR_RGB_HALO",
+        "pos": [
+          38.0,
+          -16.0
+        ],
+        "width": 2.54,
+        "height": 7.62,
+        "pins": {
+          "1": {
+            "name": "5V",
+            "net": "+5V_SERVO",
+            "rel": [
+              0.0,
+              2.54
+            ]
+          },
+          "2": {
+            "name": "DATA",
+            "net": "WS2812B_DATA",
+            "rel": [
+              0.0,
+              0.0
+            ]
+          },
+          "3": {
+            "name": "GND",
+            "net": "GND",
+            "rel": [
+              0.0,
+              -2.54
+            ]
+          }
+        }
+      },
+      "SW1": {
+        "name": "BTN_RST",
+        "pos": [
+          -26.0,
+          0.0
+        ],
+        "width": 4.0,
+        "height": 3.0,
+        "pins": {
+          "1": {
+            "name": "1",
+            "net": "MCU_RST",
+            "rel": [
+              -1.5,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "2",
+            "net": "GND",
+            "rel": [
+              1.5,
+              0.0
+            ]
+          }
+        }
+      },
+      "SW2": {
+        "name": "BTN_BOOT",
+        "pos": [
+          28.0,
+          -6.0
+        ],
+        "width": 4.0,
+        "height": 3.0,
+        "pins": {
+          "1": {
+            "name": "1",
+            "net": "BOOT_BTN",
+            "rel": [
+              -1.5,
+              0.0
+            ]
+          },
+          "2": {
+            "name": "2",
+            "net": "GND",
+            "rel": [
+              1.5,
+              0.0
+            ]
+          }
+        }
+      },
+      "TP1": {
+        "name": "TOUCH_PAD_HEAD",
+        "pos": [
+          0.0,
+          22.0
+        ],
+        "width": 4.0,
+        "height": 4.0,
+        "pins": {
+          "1": {
+            "name": "PAD",
+            "net": "TOUCH_HEAD",
+            "rel": [
+              0.0,
+              0.0
+            ]
+          }
+        }
+      }
+    },
+    "tracks": [
+      {
+        "net": "VBUS_FUSED",
+        "layer": "Bottom",
+        "start": [
+          -2.0,
+          -40.5
+        ],
+        "end": [
+          -2.0,
+          -37.5
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "VBUS_FUSED",
+        "layer": "Top",
+        "start": [
+          -2.0,
+          -37.5
+        ],
+        "end": [
+          -18.5,
+          -37.5
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "VBUS_FUSED",
+        "layer": "Bottom",
+        "start": [
+          -18.5,
+          -37.5
+        ],
+        "end": [
+          -18.5,
+          -29.5
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "VBUS_FUSED",
+        "layer": "Top",
+        "start": [
+          -18.5,
+          -29.5
+        ],
+        "end": [
+          -14.7,
+          -29.5
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "VBUS_FUSED",
+        "layer": "Bottom",
+        "start": [
+          -14.7,
+          -29.5
+        ],
+        "end": [
+          -14.7,
+          -31.05
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "VBUS_FUSED",
+        "layer": "Bottom",
+        "start": [
+          -18.5,
+          -29.5
+        ],
+        "end": [
+          -18.5,
+          -31.05
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "VBUS_FUSED",
+        "layer": "Top",
+        "start": [
+          -18.5,
+          -31.05
+        ],
+        "end": [
+          -17.3,
+          -31.05
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "BUCK_SW",
+        "layer": "Top",
+        "start": [
+          -14.7,
+          -32.95
+        ],
+        "end": [
+          -12.0,
+          -32.95
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "BUCK_SW",
+        "layer": "Bottom",
+        "start": [
+          -12.0,
+          -32.95
+        ],
+        "end": [
+          -12.0,
+          -32.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "BUCK_SW",
+        "layer": "Top",
+        "start": [
+          -12.0,
+          -32.0
+        ],
+        "end": [
+          -9.8,
+          -32.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Bottom",
+        "start": [
+          2.0,
+          -40.5
+        ],
+        "end": [
+          2.0,
+          -36.5
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Top",
+        "start": [
+          2.0,
+          -36.5
+        ],
+        "end": [
+          16.25,
+          -36.5
+        ],
+        "width": 0.7
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Bottom",
+        "start": [
+          16.25,
+          -36.5
+        ],
+        "end": [
+          16.25,
+          -32.0
+        ],
+        "width": 0.7
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Bottom",
+        "start": [
+          16.25,
+          -32.0
+        ],
+        "end": [
+          16.25,
+          -21.0
+        ],
+        "width": 0.7
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Top",
+        "start": [
+          16.25,
+          -21.0
+        ],
+        "end": [
+          -20.0,
+          -21.0
+        ],
+        "width": 0.7
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Bottom",
+        "start": [
+          -20.0,
+          -21.0
+        ],
+        "end": [
+          -20.0,
+          -18.0
+        ],
+        "width": 0.7
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Bottom",
+        "start": [
+          0.0,
+          -21.0
+        ],
+        "end": [
+          0.0,
+          -18.0
+        ],
+        "width": 0.7
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Bottom",
+        "start": [
+          20.0,
+          -21.0
+        ],
+        "end": [
+          20.0,
+          -18.0
+        ],
+        "width": 0.7
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Top",
+        "start": [
+          16.25,
+          -21.0
+        ],
+        "end": [
+          40.5,
+          -21.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Bottom",
+        "start": [
+          40.5,
+          -21.0
+        ],
+        "end": [
+          40.5,
+          -13.46
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+5V_SERVO",
+        "layer": "Top",
+        "start": [
+          40.5,
+          -13.46
+        ],
+        "end": [
+          38.0,
+          -13.46
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Top",
+        "start": [
+          -6.2,
+          -32.0
+        ],
+        "end": [
+          -6.2,
+          -32.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Bottom",
+        "start": [
+          -6.2,
+          -32.0
+        ],
+        "end": [
+          -6.2,
+          -26.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Top",
+        "start": [
+          -6.2,
+          -26.0
+        ],
+        "end": [
+          -25.0,
+          -26.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Bottom",
+        "start": [
+          -25.0,
+          -26.0
+        ],
+        "end": [
+          -25.0,
+          38.5
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Top",
+        "start": [
+          -25.0,
+          3.81
+        ],
+        "end": [
+          -38.0,
+          3.81
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Top",
+        "start": [
+          -25.0,
+          15.73
+        ],
+        "end": [
+          -9.0,
+          15.73
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Top",
+        "start": [
+          -25.0,
+          38.5
+        ],
+        "end": [
+          -24.35,
+          38.5
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Bottom",
+        "start": [
+          -24.35,
+          38.5
+        ],
+        "end": [
+          -24.35,
+          36.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Top",
+        "start": [
+          -25.0,
+          38.5
+        ],
+        "end": [
+          -6.35,
+          38.5
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Bottom",
+        "start": [
+          -6.35,
+          38.5
+        ],
+        "end": [
+          -6.35,
+          42.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Top",
+        "start": [
+          -6.35,
+          38.5
+        ],
+        "end": [
+          11.65,
+          38.5
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Bottom",
+        "start": [
+          11.65,
+          38.5
+        ],
+        "end": [
+          11.65,
+          21.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Top",
+        "start": [
+          11.65,
+          21.0
+        ],
+        "end": [
+          38.0,
+          21.0
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "+3V3",
+        "layer": "Bottom",
+        "start": [
+          38.0,
+          21.0
+        ],
+        "end": [
+          38.0,
+          6.35
+        ],
+        "width": 0.508
+      },
+      {
+        "net": "TFT_SCLK_LEFT",
+        "layer": "Bottom",
+        "start": [
+          -7.0,
+          -6.75
+        ],
+        "end": [
+          -7.0,
+          -10.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_SCLK_LEFT",
+        "layer": "Top",
+        "start": [
+          -7.0,
+          -10.0
+        ],
+        "end": [
+          -21.81,
+          -10.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_SCLK_LEFT",
+        "layer": "Bottom",
+        "start": [
+          -21.81,
+          -10.0
+        ],
+        "end": [
+          -21.81,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_MOSI_LEFT",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          -5.86
+        ],
+        "end": [
+          -19.27,
+          -5.86
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_MOSI_LEFT",
+        "layer": "Bottom",
+        "start": [
+          -19.27,
+          -5.86
+        ],
+        "end": [
+          -19.27,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_RST",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          -4.59
+        ],
+        "end": [
+          -16.73,
+          -4.59
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_RST",
+        "layer": "Bottom",
+        "start": [
+          -16.73,
+          -4.59
+        ],
+        "end": [
+          -16.73,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_RST",
+        "layer": "Top",
+        "start": [
+          -16.73,
+          34.0
+        ],
+        "end": [
+          19.27,
+          34.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_RST",
+        "layer": "Bottom",
+        "start": [
+          19.27,
+          34.0
+        ],
+        "end": [
+          19.27,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_DC_LEFT",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          -3.32
+        ],
+        "end": [
+          -14.19,
+          -3.32
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_DC_LEFT",
+        "layer": "Bottom",
+        "start": [
+          -14.19,
+          -3.32
+        ],
+        "end": [
+          -14.19,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_CS_LEFT",
+        "layer": "Bottom",
+        "start": [
+          -5.0,
+          -6.75
+        ],
+        "end": [
+          -5.0,
+          -8.5
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_CS_LEFT",
+        "layer": "Top",
+        "start": [
+          -5.0,
+          -8.5
+        ],
+        "end": [
+          -11.65,
+          -8.5
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_CS_LEFT",
+        "layer": "Bottom",
+        "start": [
+          -11.65,
+          -8.5
+        ],
+        "end": [
+          -11.65,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_SCLK_RIGHT",
+        "layer": "Top",
+        "start": [
+          9.0,
+          0.49
+        ],
+        "end": [
+          14.19,
+          0.49
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_SCLK_RIGHT",
+        "layer": "Bottom",
+        "start": [
+          14.19,
+          0.49
+        ],
+        "end": [
+          14.19,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_MOSI_RIGHT",
+        "layer": "Top",
+        "start": [
+          9.0,
+          1.76
+        ],
+        "end": [
+          16.73,
+          1.76
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_MOSI_RIGHT",
+        "layer": "Bottom",
+        "start": [
+          16.73,
+          1.76
+        ],
+        "end": [
+          16.73,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_DC_RIGHT",
+        "layer": "Top",
+        "start": [
+          9.0,
+          3.03
+        ],
+        "end": [
+          21.81,
+          3.03
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_DC_RIGHT",
+        "layer": "Bottom",
+        "start": [
+          21.81,
+          3.03
+        ],
+        "end": [
+          21.81,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_CS_RIGHT",
+        "layer": "Bottom",
+        "start": [
+          -3.0,
+          -6.75
+        ],
+        "end": [
+          -3.0,
+          -11.5
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_CS_RIGHT",
+        "layer": "Top",
+        "start": [
+          -3.0,
+          -11.5
+        ],
+        "end": [
+          24.35,
+          -11.5
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TFT_CS_RIGHT",
+        "layer": "Bottom",
+        "start": [
+          24.35,
+          -11.5
+        ],
+        "end": [
+          24.35,
+          36.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SDA",
+        "layer": "Bottom",
+        "start": [
+          1.0,
+          -6.75
+        ],
+        "end": [
+          1.0,
+          -6.75
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SDA",
+        "layer": "Top",
+        "start": [
+          1.0,
+          -6.75
+        ],
+        "end": [
+          1.27,
+          -6.75
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SDA",
+        "layer": "Bottom",
+        "start": [
+          1.27,
+          -6.75
+        ],
+        "end": [
+          1.27,
+          42.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SDA",
+        "layer": "Bottom",
+        "start": [
+          1.27,
+          -6.75
+        ],
+        "end": [
+          1.27,
+          -13.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SDA",
+        "layer": "Top",
+        "start": [
+          1.27,
+          -13.0
+        ],
+        "end": [
+          -35.0,
+          -13.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SDA",
+        "layer": "Bottom",
+        "start": [
+          -35.0,
+          -13.0
+        ],
+        "end": [
+          -35.0,
+          -3.81
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SDA",
+        "layer": "Top",
+        "start": [
+          -35.0,
+          -3.81
+        ],
+        "end": [
+          -38.0,
+          -3.81
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SCL",
+        "layer": "Bottom",
+        "start": [
+          3.0,
+          -6.75
+        ],
+        "end": [
+          3.0,
+          -9.5
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SCL",
+        "layer": "Top",
+        "start": [
+          3.0,
+          -9.5
+        ],
+        "end": [
+          2.5,
+          -9.5
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SCL",
+        "layer": "Bottom",
+        "start": [
+          2.5,
+          -9.5
+        ],
+        "end": [
+          2.5,
+          32.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SCL",
+        "layer": "Top",
+        "start": [
+          2.5,
+          32.0
+        ],
+        "end": [
+          -1.27,
+          32.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SCL",
+        "layer": "Bottom",
+        "start": [
+          -1.27,
+          32.0
+        ],
+        "end": [
+          -1.27,
+          42.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SCL",
+        "layer": "Bottom",
+        "start": [
+          2.5,
+          -9.5
+        ],
+        "end": [
+          2.5,
+          -14.5
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SCL",
+        "layer": "Top",
+        "start": [
+          2.5,
+          -14.5
+        ],
+        "end": [
+          -34.0,
+          -14.5
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SCL",
+        "layer": "Bottom",
+        "start": [
+          -34.0,
+          -14.5
+        ],
+        "end": [
+          -34.0,
+          -1.27
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2C_SCL",
+        "layer": "Top",
+        "start": [
+          -34.0,
+          -1.27
+        ],
+        "end": [
+          -38.0,
+          -1.27
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_DIN",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          9.38
+        ],
+        "end": [
+          -22.6,
+          9.38
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_DIN",
+        "layer": "Bottom",
+        "start": [
+          -22.6,
+          9.38
+        ],
+        "end": [
+          -22.6,
+          27.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_DIN",
+        "layer": "Top",
+        "start": [
+          -22.6,
+          27.0
+        ],
+        "end": [
+          35.0,
+          27.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_DIN",
+        "layer": "Bottom",
+        "start": [
+          35.0,
+          27.0
+        ],
+        "end": [
+          35.0,
+          1.27
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_DIN",
+        "layer": "Top",
+        "start": [
+          35.0,
+          1.27
+        ],
+        "end": [
+          38.0,
+          1.27
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_BCLK",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          8.11
+        ],
+        "end": [
+          -23.4,
+          8.11
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_BCLK",
+        "layer": "Bottom",
+        "start": [
+          -23.4,
+          8.11
+        ],
+        "end": [
+          -23.4,
+          28.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_BCLK",
+        "layer": "Top",
+        "start": [
+          -23.4,
+          28.0
+        ],
+        "end": [
+          36.0,
+          28.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_BCLK",
+        "layer": "Bottom",
+        "start": [
+          36.0,
+          28.0
+        ],
+        "end": [
+          36.0,
+          -3.81
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_BCLK",
+        "layer": "Top",
+        "start": [
+          36.0,
+          -3.81
+        ],
+        "end": [
+          38.0,
+          -3.81
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_LRCLK",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          6.84
+        ],
+        "end": [
+          -24.2,
+          6.84
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_LRCLK",
+        "layer": "Bottom",
+        "start": [
+          -24.2,
+          6.84
+        ],
+        "end": [
+          -24.2,
+          29.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_LRCLK",
+        "layer": "Top",
+        "start": [
+          -24.2,
+          29.0
+        ],
+        "end": [
+          37.0,
+          29.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_LRCLK",
+        "layer": "Bottom",
+        "start": [
+          37.0,
+          29.0
+        ],
+        "end": [
+          37.0,
+          -1.27
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "I2S_LRCLK",
+        "layer": "Top",
+        "start": [
+          37.0,
+          -1.27
+        ],
+        "end": [
+          38.0,
+          -1.27
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_PAN_PWM",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          13.19
+        ],
+        "end": [
+          -17.46,
+          13.19
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_PAN_PWM",
+        "layer": "Bottom",
+        "start": [
+          -17.46,
+          13.19
+        ],
+        "end": [
+          -17.46,
+          -18.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_TILT_L_PWM",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          11.92
+        ],
+        "end": [
+          -10.2,
+          11.92
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_TILT_L_PWM",
+        "layer": "Bottom",
+        "start": [
+          -10.2,
+          11.92
+        ],
+        "end": [
+          -10.2,
+          -16.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_TILT_L_PWM",
+        "layer": "Top",
+        "start": [
+          -10.2,
+          -16.0
+        ],
+        "end": [
+          2.54,
+          -16.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_TILT_L_PWM",
+        "layer": "Bottom",
+        "start": [
+          2.54,
+          -16.0
+        ],
+        "end": [
+          2.54,
+          -18.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_TILT_R_PWM",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          10.65
+        ],
+        "end": [
+          -11.0,
+          10.65
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_TILT_R_PWM",
+        "layer": "Bottom",
+        "start": [
+          -11.0,
+          10.65
+        ],
+        "end": [
+          -11.0,
+          -17.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_TILT_R_PWM",
+        "layer": "Top",
+        "start": [
+          -11.0,
+          -17.0
+        ],
+        "end": [
+          22.54,
+          -17.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "SERVO_TILT_R_PWM",
+        "layer": "Bottom",
+        "start": [
+          22.54,
+          -17.0
+        ],
+        "end": [
+          22.54,
+          -18.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TOF_XSHUT",
+        "layer": "Top",
+        "start": [
+          9.0,
+          6.84
+        ],
+        "end": [
+          3.81,
+          6.84
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TOF_XSHUT",
+        "layer": "Bottom",
+        "start": [
+          3.81,
+          6.84
+        ],
+        "end": [
+          3.81,
+          42.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TOF_INT",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          4.3
+        ],
+        "end": [
+          -15.46,
+          4.3
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TOF_INT",
+        "layer": "Bottom",
+        "start": [
+          -15.46,
+          4.3
+        ],
+        "end": [
+          -15.46,
+          40.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TOF_INT",
+        "layer": "Top",
+        "start": [
+          -15.46,
+          40.0
+        ],
+        "end": [
+          6.35,
+          40.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TOF_INT",
+        "layer": "Bottom",
+        "start": [
+          6.35,
+          40.0
+        ],
+        "end": [
+          6.35,
+          42.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TOUCH_HEAD",
+        "layer": "Top",
+        "start": [
+          9.0,
+          8.11
+        ],
+        "end": [
+          5.0,
+          8.11
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TOUCH_HEAD",
+        "layer": "Bottom",
+        "start": [
+          5.0,
+          8.11
+        ],
+        "end": [
+          5.0,
+          22.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "TOUCH_HEAD",
+        "layer": "Top",
+        "start": [
+          5.0,
+          22.0
+        ],
+        "end": [
+          0.0,
+          22.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "MCU_RST",
+        "layer": "Top",
+        "start": [
+          -9.0,
+          14.46
+        ],
+        "end": [
+          -27.5,
+          14.46
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "MCU_RST",
+        "layer": "Bottom",
+        "start": [
+          -27.5,
+          14.46
+        ],
+        "end": [
+          -27.5,
+          0.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "BOOT_BTN",
+        "layer": "Bottom",
+        "start": [
+          7.0,
+          -6.75
+        ],
+        "end": [
+          7.0,
+          -8.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "BOOT_BTN",
+        "layer": "Top",
+        "start": [
+          7.0,
+          -8.0
+        ],
+        "end": [
+          26.5,
+          -8.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "BOOT_BTN",
+        "layer": "Bottom",
+        "start": [
+          26.5,
+          -8.0
+        ],
+        "end": [
+          26.5,
+          -6.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "WS2812B_DATA",
+        "layer": "Top",
+        "start": [
+          9.0,
+          -2.05
+        ],
+        "end": [
+          28.0,
+          -2.05
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "WS2812B_DATA",
+        "layer": "Bottom",
+        "start": [
+          28.0,
+          -2.05
+        ],
+        "end": [
+          28.0,
+          -16.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "WS2812B_DATA",
+        "layer": "Top",
+        "start": [
+          28.0,
+          -16.0
+        ],
+        "end": [
+          38.0,
+          -16.0
+        ],
+        "width": 0.254
+      },
+      {
+        "net": "USB_D_POS",
+        "layer": "Top",
+        "start": [
+          -0.4,
+          -40.5
+        ],
+        "end": [
+          -0.4,
+          -38.5
+        ],
+        "width": 0.2
+      },
+      {
+        "net": "USB_D_NEG",
+        "layer": "Top",
+        "start": [
+          0.4,
+          -40.5
+        ],
+        "end": [
+          0.4,
+          -38.5
+        ],
+        "width": 0.2
+      },
+      {
+        "net": "USB_D_POS",
+        "layer": "Bottom",
+        "start": [
+          -0.4,
+          -38.5
+        ],
+        "end": [
+          -0.4,
+          -25.0
+        ],
+        "width": 0.2
+      },
+      {
+        "net": "USB_D_POS",
+        "layer": "Top",
+        "start": [
+          -0.4,
+          -25.0
+        ],
+        "end": [
+          -6.0,
+          -25.0
+        ],
+        "width": 0.2
+      },
+      {
+        "net": "USB_D_POS",
+        "layer": "Bottom",
+        "start": [
+          -6.0,
+          -25.0
+        ],
+        "end": [
+          -6.0,
+          0.49
+        ],
+        "width": 0.2
+      },
+      {
+        "net": "USB_D_POS",
+        "layer": "Top",
+        "start": [
+          -6.0,
+          0.49
+        ],
+        "end": [
+          -9.0,
+          0.49
+        ],
+        "width": 0.2
+      },
+      {
+        "net": "USB_D_NEG",
+        "layer": "Bottom",
+        "start": [
+          0.4,
+          -38.5
+        ],
+        "end": [
+          0.4,
+          -24.0
+        ],
+        "width": 0.2
+      },
+      {
+        "net": "USB_D_NEG",
+        "layer": "Top",
+        "start": [
+          0.4,
+          -24.0
+        ],
+        "end": [
+          -4.0,
+          -24.0
+        ],
+        "width": 0.2
+      },
+      {
+        "net": "USB_D_NEG",
+        "layer": "Bottom",
+        "start": [
+          -4.0,
+          -24.0
+        ],
+        "end": [
+          -4.0,
+          1.76
+        ],
+        "width": 0.2
+      },
+      {
+        "net": "USB_D_NEG",
+        "layer": "Top",
+        "start": [
+          -4.0,
+          1.76
+        ],
+        "end": [
+          -9.0,
+          1.76
+        ],
+        "width": 0.2
+      }
+    ],
+    "vias": [
+      {
+        "pos": [
+          5.0,
+          8.11
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          11.65,
+          38.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          1.0,
+          -6.75
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -7.0,
+          -10.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          19.27,
+          34.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -4.0,
+          1.76
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          26.5,
+          -8.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -14.7,
+          -29.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          16.73,
+          1.76
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -6.35,
+          38.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -14.19,
+          -3.32
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          37.0,
+          -1.27
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -11.65,
+          -8.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -15.46,
+          4.3
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -6.2,
+          -26.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -19.27,
+          -5.86
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -34.0,
+          -14.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -22.6,
+          9.38
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -12.0,
+          -32.95
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -27.5,
+          14.46
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          2.5,
+          32.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          24.35,
+          -11.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          3.81,
+          6.84
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          1.27,
+          -6.75
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -11.0,
+          -17.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          14.19,
+          0.49
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          28.0,
+          -16.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -24.2,
+          29.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -16.73,
+          -4.59
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          21.81,
+          3.03
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -18.5,
+          -31.05
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          1.27,
+          -13.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          2.5,
+          -9.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -6.0,
+          0.49
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          11.65,
+          21.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          16.25,
+          -36.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -6.0,
+          -25.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -5.0,
+          -8.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -3.0,
+          -11.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -1.27,
+          32.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -2.0,
+          -37.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -11.0,
+          10.65
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -35.0,
+          -13.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -22.6,
+          27.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          2.5,
+          -14.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          40.5,
+          -21.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -35.0,
+          -3.81
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -18.5,
+          -37.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          3.0,
+          -9.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          40.5,
+          -13.46
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -23.4,
+          8.11
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          28.0,
+          -2.05
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          0.4,
+          -38.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -23.4,
+          28.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          2.0,
+          -36.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -6.2,
+          -32.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -24.2,
+          6.84
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -20.0,
+          -21.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -12.0,
+          -32.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -10.2,
+          -16.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -34.0,
+          -1.27
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -0.4,
+          -38.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -21.81,
+          -10.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -10.2,
+          11.92
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          0.4,
+          -24.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          36.0,
+          -3.81
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          35.0,
+          27.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          2.54,
+          -16.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          36.0,
+          28.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          7.0,
+          -8.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          5.0,
+          22.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          35.0,
+          1.27
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -4.0,
+          -24.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          6.35,
+          40.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -24.35,
+          38.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          37.0,
+          29.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -17.46,
+          13.19
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -0.4,
+          -25.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -25.0,
+          -26.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -15.46,
+          40.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -25.0,
+          38.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          38.0,
+          21.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          -18.5,
+          -29.5
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          16.25,
+          -21.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      },
+      {
+        "pos": [
+          22.54,
+          -17.0
+        ],
+        "diameter": 0.6,
+        "drill": 0.3
+      }
+    ]
+  }
+}

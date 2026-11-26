@@ -28,6 +28,7 @@
 #include "emotion_engine.h"
 #include "voice_synth.h"
 #include "behavior_engine.h"
+#include "exploration_engine.h"
 #include "power_mgr.h"
 #include "web_dashboard.h"
 
@@ -39,6 +40,7 @@ AuraHaloLEDs        haloLEDs;
 AuraEmotionEngine   emotionEngine;
 AuraVoiceSynth      voiceEngine;
 AuraBehaviorEngine  behaviorEngine;
+AuraExplorationEngine explorationEngine;
 AuraPowerManager    powerManager;
 AuraWebDashboard    webDashboard;
 
@@ -204,11 +206,12 @@ void setup() {
     voiceEngine.init();
     Serial.println("[AURA] Halo LEDs and MAX98357A voice synth online");
 
-    // 5. Initialize emotion state machine and behavior tree
+    // 5. Initialize emotion state machine, behavior tree, and exploration engine
     uint32_t startupTime = millis();
     emotionEngine.init(startupTime);
     behaviorEngine.init(startupTime);
-    Serial.println("[AURA] Behavior and emotion engine online");
+    explorationEngine.init(startupTime);
+    Serial.println("[AURA] Behavior, exploration and emotion engine online");
 
     // 6. Initialize SoftAP Web Dashboard (192.168.4.1)
     webDashboard.init();

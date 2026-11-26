@@ -1,0 +1,18 @@
+Comment,Designator,Footprint,LCSC Part #
+470uF 16V Low-ESR Bulk Capacitor,C4,CAP-TH_D6.3mm_P2.5mm,C331393
+USB-C 16-Pin Receptacle,J1,USB-C-16P-SMD,C7416410
+Pin Header 1x3 2.54mm (WS2812B RGB Halo),J11,HDR-TH_1x3_P2.54mm,C224329
+Pin Header 1x3 2.54mm (Pan Servo),J2,HDR-TH_1x3_P2.54mm,C224329
+Pin Header 1x3 2.54mm (Tilt Left Servo),J3,HDR-TH_1x3_P2.54mm,C224329
+Pin Header 1x3 2.54mm (Tilt Right Servo),J4,HDR-TH_1x3_P2.54mm,C224329
+Pin Header 1x8 2.54mm (Left GC9A01 Display),J5,HDR-TH_1x8_P2.54mm,C224334
+Pin Header 1x8 2.54mm (Right GC9A01 Display),J6,HDR-TH_1x8_P2.54mm,C224334
+Pin Header 1x6 2.54mm (VL53L1X ToF Sensor),J7,HDR-TH_1x6_P2.54mm,C224332
+Pin Header 1x6 2.54mm (INMP441 I2S Mic),J8,HDR-TH_1x6_P2.54mm,C224332
+Pin Header 1x4 2.54mm (AS5600 Magnetic Encoder),J9,HDR-TH_1x4_P2.54mm,C224330
+2.2uH 2.5A Shielded Power Inductor,L1,IND-SMD_4.0x4.0mm,C107297
+Tactile Switch (EN/Reset),SW1,SW-SMD_3.0x2.0mm,C318884
+Tactile Switch (Boot/GPIO0),SW2,SW-SMD_3.0x2.0mm,C318884
+Capacitive Head Touch Sensor Pad,TP1,PAD_SMD_6.0x6.0mm,HAND_SOLDER
+ESP32-S3-WROOM-1-N16R8,U1,MODULE_ESP32-S3-WROOM-1,C2913200
+SY8089AAAC (5V 2A Sync Buck),U2,SOT-23-5,C2837340

@@ -1,0 +1,18 @@
+Designator,Val,Package,Mid X,Mid Y,Rotation,Layer
+C4,470uF 16V Low-ESR Bulk Capacitor,Radial-6.3mm,18.0,-32.0,0.0,Top
+J1,USB-C 16-Pin Receptacle,USB-C-16P,0.0,-42.0,180.0,Top
+J11,Pin Header 1x3 2.54mm (WS2812B RGB Halo),TH-1x3,38.0,-16.0,90.0,Top
+J2,Pin Header 1x3 2.54mm (Pan Servo),TH-1x3,-20.0,-18.0,0.0,Top
+J3,Pin Header 1x3 2.54mm (Tilt Left Servo),TH-1x3,0.0,-18.0,0.0,Top
+J4,Pin Header 1x3 2.54mm (Tilt Right Servo),TH-1x3,20.0,-18.0,0.0,Top
+J5,Pin Header 1x8 2.54mm (Left GC9A01 Display),TH-1x8,-18.0,36.0,0.0,Top
+J6,Pin Header 1x8 2.54mm (Right GC9A01 Display),TH-1x8,18.0,36.0,0.0,Top
+J7,Pin Header 1x6 2.54mm (VL53L1X ToF Sensor),TH-1x6,0.0,42.0,0.0,Top
+J8,Pin Header 1x6 2.54mm (INMP441 I2S Mic),TH-1x6,38.0,0.0,90.0,Top
+J9,Pin Header 1x4 2.54mm (AS5600 Magnetic Encoder),TH-1x4,-38.0,0.0,90.0,Top
+L1,2.2uH 2.5A Shielded Power Inductor,NR4018,-8.0,-32.0,0.0,Top
+SW1,Tactile Switch (EN/Reset),SMD-3x2mm,-26.0,0.0,0.0,Top
+SW2,Tactile Switch (Boot/GPIO0),SMD-3x2mm,28.0,-6.0,0.0,Top
+TP1,Capacitive Head Touch Sensor Pad,PAD-6mm,0.0,22.0,0.0,Top
+U1,ESP32-S3-WROOM-1-N16R8,SMD-41,0.0,6.0,0.0,Top
+U2,SY8089AAAC (5V 2A Sync Buck),SOT-23-5,-16.0,-32.0,0.0,Top
