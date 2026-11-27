@@ -31,12 +31,14 @@ Aura1/
     aura_halo_diffuser_printready.stl     # Neck turntable halo light optical diffuser ring
     aura_torso_cowl_printready.stl        # Torso mid-body cosmetic enclosure jacket with cooling louvers
     aura_cable_guides_printready.stl      # Turntable neck cable harness guide and strain relief sleeve
+    aura_desk_stand_printready.stl        # Anti-vibration desktop weighted docking stand with acoustic cutout
     aura_assembly.blend                   # Full Blender 4.2 parametric 3D CAD assembly
   hardware/
     circuit_architecture.md               # Complete electrical power and PCB design specification
     pcb/
       aura_carrier_board.kicad_pcb        # Production KiCad 2-layer carrier board layout (0 DRC)
       aura_carrier_board.epro             # EasyEDA Pro project file
+      aura_pcb_populated_3d.blend         # Populated 3D carrier motherboard Blender CAD model
       jlcpcb_bom.csv                      # SMT manufacturing BOM with LCSC part numbers
       jlcpcb_cpl.csv                      # SMT Pick-and-Place component centroid coordinates
       aura_pcb_layout_2d.png              # 2D PCB layout blueprint
@@ -58,10 +60,17 @@ Aura1/
       power_mgr.h                       # 18650 Li-ion battery ADC monitoring and power states
       behavior_engine.h                 # Autonomous desktop personality and sleep/wake engine
       exploration_engine.h              # Autonomous environmental exploration and ambient gaze engine
+      espnow_mesh.h                     # Multi-robot ESP-NOW peer handshake and swarm interaction
       web_dashboard.h                   # Wireless SoftAP telemetry and calibration dashboard
     src/
       main.cpp                          # Dual-core FreeRTOS main loop and task scheduler
   images/
+    aura_day19_1_color_multi_robot_showcase.png # Dual AURA-1 robots interacting over low-latency ESP-NOW peer mesh
+    aura_day19_2_color_desk_stand_closeup.png # Macro beauty closeup of weighted desktop docking stand
+    aura_day19_3_color_peer_sync_halo_pose.png # Robot responding to peer social greeting with electric violet halo
+    aura_day19_4_design_desk_stand_wireframe.png # CAD technical elevation showing acoustic notch and ballast cavity
+    aura_day19_5_design_peer_rf_architecture.png # CAD cutaway view of ESP32-S3 inverted-F antenna RF clearance
+    aura_day19_6_design_exploded_stand_chassis_iso.png # Exploded CAD view of silicone pads, stand, and chassis
     aura_day18_1_color_exploration_showcase.png # Robot in active inquisitive environmental exploration pose
     aura_day18_2_color_cable_guide_closeup.png # Macro beauty closeup of turntable cable guide sleeve
     aura_day18_3_color_ambient_tracking_pose.png # Robot adapting to room lighting with wide curious gaze
@@ -324,6 +333,13 @@ AURA 1 uses the multi-zone Region of Interest (ROI) capabilities of the ST VL53L
    - Infill: 40% gyroid
    - Note: Sleeves cleanly through the 8.0mm bore of the 608ZZ radial bearing with smooth 1.0mm bell-mouthed entry and exit flares to prevent wire chafing during continuous 180-degree pan rotation, featuring an upper mounting collar with zip-tie anchor slots and lower retaining shoulder.
 
+10. Anti-Vibration Desktop Weighted Stand (`aura_desk_stand_printready.stl`):
+    - Material: Matte Dark Slate PLA or PETG
+    - Layer height: 0.20mm
+    - Perimeters: 4 walls
+    - Infill: 30% gyroid
+    - Note: Circular 126mm docking collar with 0.4mm slip-fit taper cupping the lower chassis tub, 46mm front acoustic cutout unblocking the 9-slot speaker grill, rear USB-C power notch, 4x bottom silicone elastomer feet sockets, and internal annular ballast groove accommodating 120g of steel ballast to lower the center of gravity and eliminate desk slip during aggressive head acceleration.
+
 ## Bill of Materials and Real-World Manufacturing Budget
 
 AURA 1 is designed to be affordable to build for high-school students, makers, and hobbyists. Below is the itemized cost breakdown comparing in-house 3D printing against ordering parts from commercial 3D printing service bureaus in India.
@@ -451,6 +467,24 @@ To bring AURA 1 to life as an authentic curious desktop companion when not direc
 3. Acoustic Orientation Lock and Thermal Governor:
    - Localized directional sound transients from the stereo INMP441 microphones instantly interrupt ambient exploration, snapping the robot head toward the sound source and holding gaze for 1.8 to 3.5 seconds.
    - A cumulative angular motion tracker automatically enforces 1.5-second peaceful rests every 350 degrees of continuous travel, keeping servo motor core temperatures strictly below 45 deg C.
+
+## Multi-Robot ESP-NOW Peer Handshake and Swarm Interaction
+
+For interactive group showcases and maker exhibits, AURA 1 implements an ad-hoc 2.4GHz peer mesh protocol (`firmware/include/espnow_mesh.h`) requiring zero Wi-Fi routers or network infrastructure:
+
+1. Sub-2ms Datagram Protocol:
+   - Uses Espressif ESP-NOW running directly on Core 0 to broadcast lightweight 16-byte fixed-size binary packets.
+   - Packet payload conveys peer validation magic (0xA1), unique robot instance ID, sequence number, mood state, 2-axis gaze angles (pan and pitch), WS2812B halo hue, battery percentage, and social action codes.
+
+2. Peer Discovery and Proximity Table:
+   - Continuously listens for nearby AURA 1 units, maintaining a local dynamic peer table of up to 4 robots with last-seen timestamps and signal strength (RSSI).
+   - Automatically prunes stale peers that move out of RF range (> 4.5s absence).
+
+3. Coordinated Social Behaviors:
+   - Reciprocal Eye Contact: When Peer Robot B transmits its gaze heading, Robot A calculates relative orientation, turning its head to meet Robot B's gaze.
+   - Synchronized Halo Breathing: Nearby units lock their WS2812B halo lighting into a shared electric violet or cyan pulse wave during social interactions.
+   - Greeting Chimes: Triggers answering Wall-E style harmonic chirps and happy eye squints via the MAX98357A voice synthesizer upon peer discovery.
+   - Anti-Collision Backoff: Randomized transmission intervals prevent packet collisions when multiple robots operate in close proximity at booth exhibits.
 
 ## Production Carrier Board PCB and Manufacturing Hardware
 

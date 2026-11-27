@@ -29,6 +29,7 @@
 #include "voice_synth.h"
 #include "behavior_engine.h"
 #include "exploration_engine.h"
+#include "espnow_mesh.h"
 #include "power_mgr.h"
 #include "web_dashboard.h"
 
@@ -41,6 +42,7 @@ AuraEmotionEngine   emotionEngine;
 AuraVoiceSynth      voiceEngine;
 AuraBehaviorEngine  behaviorEngine;
 AuraExplorationEngine explorationEngine;
+AuraEspNowMesh      peerMesh;
 AuraPowerManager    powerManager;
 AuraWebDashboard    webDashboard;
 
@@ -213,9 +215,10 @@ void setup() {
     explorationEngine.init(startupTime);
     Serial.println("[AURA] Behavior, exploration and emotion engine online");
 
-    // 6. Initialize SoftAP Web Dashboard (192.168.4.1)
+    // 6. Initialize SoftAP Web Dashboard and ESP-NOW Peer Mesh
     webDashboard.init();
-    Serial.println("[AURA] SoftAP Web Dashboard active (SSID: AURA-1-COMPANION)");
+    peerMesh.init(1);
+    Serial.println("[AURA] SoftAP Web Dashboard & ESP-NOW Mesh active (SSID: AURA-1-COMPANION)");
 
     // Initialize FreeRTOS Task Watchdog Timer (TWDT)
     esp_task_wdt_init(3, true); // 3-second watchdog panic reset
