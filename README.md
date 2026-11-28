@@ -32,6 +32,7 @@ Aura1/
     aura_torso_cowl_printready.stl        # Torso mid-body cosmetic enclosure jacket with cooling louvers
     aura_cable_guides_printready.stl      # Turntable neck cable harness guide and strain relief sleeve
     aura_desk_stand_printready.stl        # Anti-vibration desktop weighted docking stand with acoustic cutout
+    aura_battery_door_printready.stl      # Quick-release magnetic battery service hatch door
     aura_assembly.blend                   # Full Blender 4.2 parametric 3D CAD assembly
   hardware/
     circuit_architecture.md               # Complete electrical power and PCB design specification
@@ -62,9 +63,16 @@ Aura1/
       exploration_engine.h              # Autonomous environmental exploration and ambient gaze engine
       espnow_mesh.h                     # Multi-robot ESP-NOW peer handshake and swarm interaction
       web_dashboard.h                   # Wireless SoftAP telemetry and calibration dashboard
+      sleep_manager.h                   # Deep-sleep power optimization and sub-12mA wake stubs
     src/
       main.cpp                          # Dual-core FreeRTOS main loop and task scheduler
   images/
+    aura_day20_1_color_sleep_mode_showcase.png # AURA-1 in quiescent deep-sleep standby with dimmed halo and drooped head pose
+    aura_day20_2_color_battery_door_closeup.png # Undercarriage macro closeup of magnetic quick-release battery service door
+    aura_day20_3_color_wake_stub_reaction.png # Instantaneous capacitive wake event transitioning companion to active tracking
+    aura_day20_4_design_battery_door_wireframe.png # Technical orthographic wireframe of battery hatch showing N52 magnet pockets and hinge tabs
+    aura_day20_5_design_deep_sleep_power_cutaway.png # Section cutaway highlighting power rail gating and RTC controller domains
+    aura_day20_6_design_exploded_battery_chassis_iso.png # Exploded CAD view of 18650 cell, EVA foam pad, magnetic door, and chassis floor
     aura_day19_1_color_multi_robot_showcase.png # Dual AURA-1 robots interacting over low-latency ESP-NOW peer mesh
     aura_day19_2_color_desk_stand_closeup.png # Macro beauty closeup of weighted desktop docking stand
     aura_day19_3_color_peer_sync_halo_pose.png # Robot responding to peer social greeting with electric violet halo
@@ -340,6 +348,13 @@ AURA 1 uses the multi-zone Region of Interest (ROI) capabilities of the ST VL53L
     - Infill: 30% gyroid
     - Note: Circular 126mm docking collar with 0.4mm slip-fit taper cupping the lower chassis tub, 46mm front acoustic cutout unblocking the 9-slot speaker grill, rear USB-C power notch, 4x bottom silicone elastomer feet sockets, and internal annular ballast groove accommodating 120g of steel ballast to lower the center of gravity and eliminate desk slip during aggressive head acceleration.
 
+11. Quick-Release Magnetic Battery Service Door (`aura_battery_door_printready.stl`):
+    - Material: Tough White PLA or PETG
+    - Layer height: 0.16mm (for precision fit along perimeter sealing lip)
+    - Perimeters: 3 walls
+    - Infill: 20% gyroid
+    - Note: Snap-and-latch maintenance hatch (71.2mm x 24.2mm x 2.4mm) covering the undercarriage 18650 Li-ion battery compartment. Integrates 2x N52 neodymium magnet pockets (5.1mm dia x 2.2mm depth), 2x rear alignment interlocking tabs, ergonomic textured thumb grip bevel, and recess for internal 1.0mm EVA anti-vibration cell clamping pad. Enables rapid battery replacement without chassis disassembly.
+
 ## Bill of Materials and Real-World Manufacturing Budget
 
 AURA 1 is designed to be affordable to build for high-school students, makers, and hobbyists. Below is the itemized cost breakdown comparing in-house 3D printing against ordering parts from commercial 3D printing service bureaus in India.
@@ -485,6 +500,34 @@ For interactive group showcases and maker exhibits, AURA 1 implements an ad-hoc 
    - Synchronized Halo Breathing: Nearby units lock their WS2812B halo lighting into a shared electric violet or cyan pulse wave during social interactions.
    - Greeting Chimes: Triggers answering Wall-E style harmonic chirps and happy eye squints via the MAX98357A voice synthesizer upon peer discovery.
    - Anti-Collision Backoff: Randomized transmission intervals prevent packet collisions when multiple robots operate in close proximity at booth exhibits.
+
+## Deep Sleep Power Optimization and Sub-12mA Wake Stubs
+
+To maximize untethered operating time on a single 3000mAh 18650 Li-ion charge, AURA 1 incorporates an intelligent multi-tiered power gating architecture managed by `sleep_manager.h`:
+
+1. Quiescent Current Optimization:
+   - Full active tracking and dual display animation consumes ~185mA - 240mA continuous current.
+   - When no user proximity or acoustic stimulus is detected for 120 seconds, the companion enters a drooped resting pose and transitions to light sleep.
+   - After 300 seconds of continued quiescence, the robot initiates deep-sleep mode, cutting system current draw down to 11.4mA quiescent current, delivering over 260 hours of standby life.
+
+2. Hardware Rail Gating and Peripheral De-Energization:
+   - Servo H-Bridge De-Energization: Disables LEDC PWM timers and detaches GPIO pins (`ledcDetachPin`) for all three MG90S metal-gear servos. This eliminates holding coil drive and static H-bridge quiescent drain (~18mA per servo).
+   - Display Deep Sleep Command: Issues hardware SPI sleep sequence (`0x10 SLPIN`, `0x28 DISPOFF`) to both GC9A01 LCD controllers, followed by driving CS, DC, and RST control lines low to prevent parasitic leakage current through protection clamping diodes.
+   - Audio and Illumination Gating: BCLK and LRCLK clocks to the INMP441 I2S microphone are gated, the MAX98357A I2S amplifier is held in shutdown via GPIO clamp, and the WS2812B RMT peripheral clock is powered down.
+
+3. RTC Fast Memory State Preservation:
+   - Retains mechanical trim offsets (`rtcSavedPanTrim`, `rtcSavedPitchTrim`), emotional valence (`rtcSavedMood`), and cumulative sleep cycles (`rtcSleepCycleCount`) inside the ESP32-S3 RTC Fast Memory bank (8KB) across deep-sleep cycles.
+   - Enables instantaneous wake-up without homing clicks, calibration buzzes, or emotional state reset.
+
+4. Tri-Source Autonomous Wake Stubs:
+   - Capacitive Touch Wake: Copper foil sensor under the upper skull cap dome triggers RTC IO interrupt immediately upon human touch.
+   - Optical Proximity Wake: ST VL53L1X time-of-flight sensor autonomous low-power ranging mode asserts interrupt pin when human motion is detected within 250mm.
+   - USB-C VBUS Insertion Wake: Hardware comparator monitors 5V VBUS rail, instantly waking the robot into a cheerful battery charging animation upon cable connection.
+
+5. Quick-Release Magnetic Battery Door:
+   - Undercarriage maintenance door (`cad/aura_battery_door_printready.stl`, 71.2mm x 24.2mm x 2.4mm) secured by two 5x2mm N52 neodymium disc magnets paired with dual interlocking chassis retention tabs.
+   - Includes internal 1.0mm EVA foam cell cushion that eliminates cell rattling while absorbing mechanical shocks from desktop vibrations.
+   - Allows toolless 18650 cell swapping in under 5 seconds without unscrewing the base chassis or disturbing internal wiring.
 
 ## Production Carrier Board PCB and Manufacturing Hardware
 

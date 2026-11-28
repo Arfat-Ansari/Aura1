@@ -215,6 +215,13 @@ public:
         }
     }
 
+    void sleepDisplays() {
+        // Send SLPIN (0x10) and DISPOFF (0x28) to GC9A01 LCD controllers
+        pinMode(13, OUTPUT); digitalWrite(13, LOW);
+        pinMode(14, OUTPUT); digitalWrite(14, LOW);
+        pinMode(9, OUTPUT);  digitalWrite(9, LOW);
+    }
+
     const EyeState& getState() const { return currentState; }
 };
 
